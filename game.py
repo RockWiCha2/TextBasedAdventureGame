@@ -8,7 +8,8 @@ from gui import *
 # Main game loop
 def main():
     while True:
-        #Call functions for game logic here
+        # Call functions for game logic here
+        pass  # Placeholder to avoid syntax error
 
 
 main()
