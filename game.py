@@ -2,7 +2,7 @@
 # Variables must be in camelCase 
 # Functions must be in snake_case
 
-#from gui import * outcommented temporarily due to pygame error
+from gui import * 
 from gameParser import *
 #need to import player module
 
