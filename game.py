@@ -6,7 +6,7 @@ from gui import *
 
 
 # Main game loop
-def main()
+def main():
     while True:
         #Call functions for game logic here
 
