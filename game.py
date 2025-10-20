@@ -1,6 +1,13 @@
+#---------------
+
+
 # Coding standards -
 # Variables must be in camelCase 
 # Functions must be in snake_case
+# Add comments to as many lines as possible to explain the code to other devs
+
+
+#---------------
 
 import gui
 
