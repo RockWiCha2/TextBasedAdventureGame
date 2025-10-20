@@ -70,7 +70,7 @@ You can enter commands directly or use the interactive interface.
 
 ---
 
-## 🧠 Developer Information
+## 🧠 Developer Information.
 
 ### Code Overview (Update when new files added)
 - **`game.py`** – Core game loop and logic controller.  
@@ -91,7 +91,7 @@ You can enter commands directly or use the interactive interface.
 
 ## 🧾 Credits
 
-Developed by **Group T23**  
+Developed by **Group 23**  
 **Cardiff University – CM1101 Programming Coursework**
 
 Contributors:
