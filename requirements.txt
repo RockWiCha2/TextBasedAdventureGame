@@ -2,5 +2,5 @@
 # To install every dependency, run:
 #   pip install -r requirements.txt (in your terminal)
 
-pygame==2.5.2
+pygame==2.5.5
 pygame_gui==0.6.12
