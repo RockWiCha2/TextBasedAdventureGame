@@ -1,4 +1,5 @@
-#---------------
+"""
+---------------
 
 
 # Coding standards -
@@ -8,7 +9,9 @@
 # Check requirements.txt to see what libraries/modules you need to install
 
 
-#---------------
+---------------
+"""
+
 from gui import * 
 from gameParser import *
 #need to import player module
