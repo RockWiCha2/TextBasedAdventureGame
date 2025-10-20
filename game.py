@@ -5,14 +5,16 @@
 # Variables must be in camelCase 
 # Functions must be in snake_case
 # Add comments to as many lines as possible to explain the code to other devs
+# Check requirements.txt to see what libraries/modules you need to install
 
 
+#---------------
 from gui import * 
 from gameParser import *
 #need to import player module
 
 
-#---------------
+
 
 import gui
 
