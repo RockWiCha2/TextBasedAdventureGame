@@ -273,7 +273,7 @@ item_potion_health_small = {
     "name": "a small health potion",
     "description": "Restores a small amount of vitality.",
     "mass": 0.2,
-    "type": "potion",
+    "type": "health_potion",
     "restore_hp": 15
 }
 
@@ -282,7 +282,7 @@ item_potion_health_medium = {
     "name": "a medium health potion",
     "description": "Restores a fair amount of vitality.",
     "mass": 0.4,
-    "type": "potion",
+    "type": "health_potion",
     "restore_hp": 30
 }
 
@@ -291,7 +291,7 @@ item_potion_mana_small = {
     "name": "a small mana potion",
     "description": "Restores a small amount of mana.",
     "mass": 0.2,
-    "type": "potion",
+    "type": "mana_potion",
     "restore_mana": 10
 }
 
@@ -300,7 +300,7 @@ item_potion_mana_medium = {
     "name": "a medium mana potion",
     "description": "Restores a fair amount of mana.",
     "mass": 0.4,
-    "type": "potion",
+    "type": "mana_potion",
     "restore_mana": 25
 }
 
