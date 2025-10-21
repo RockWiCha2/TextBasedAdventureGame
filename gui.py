@@ -18,6 +18,8 @@ FPS = 60                        # target frames per second for the main loop
 BG_COLOUR = (30, 30, 36)        # window background
 BORDER_COLOUR = (255, 0, 0)     # devtools rectangle colour
 TEXTBOX_RECT = (0, 0, 1000, 500)  # default size of centre text box
+TEXTBOX_MARGIN_X = 0.15  # 15% margin left/right (textbox width = 70% of window)
+TEXTBOX_MARGIN_Y = 0.2   # 20% margin top/bottom (textbox height = 60% of window)
 FONT_MIN_PX = 10
 FONT_MAX_PX = 120               # upper bound for binary search font size
 FONT_STEP = 2                   # step used inside the binary search
@@ -32,7 +34,24 @@ windowMinHeight = 480 # ...or this
 windowSize = None     # cached initial window size
 mouse_label = None    # devtools: shows mouse x/y
 DialogLabel = None    # central UITextBox used for narrative text
+dialog_text_last = ""  # last text we showed; used to restore on resize
 
+def _create_dialog_label(win_size):
+    """(Re)create the centred UITextBox sized from the current window size."""
+    global DialogLabel, manager
+    w, h = win_size
+    rect = pygame.Rect(
+        int(w * TEXTBOX_MARGIN_X),
+        int(h * TEXTBOX_MARGIN_Y),
+        int(w * (1 - 2 * TEXTBOX_MARGIN_X)),
+        int(h * (1 - 2 * TEXTBOX_MARGIN_Y)),
+    )
+    DialogLabel = pygame_gui.elements.UITextBox(
+        html_text='',
+        relative_rect=rect,
+        manager=manager,
+        anchors={"centerx": "centerx", "centery": "centery"}
+    )
 
 def start():
     """Boot the GUI: create window, UI manager and the centred text box.
@@ -65,13 +84,8 @@ def start():
     # Create UI manager with current window size
     manager = pygame_gui.UIManager(windowSize)
 
-    # Create a centered UILabel with empty text to always exist
-    DialogLabel = pygame_gui.elements.UITextBox(
-        html_text='',
-        relative_rect=pygame.Rect(*TEXTBOX_RECT),
-        manager=manager,
-        anchors={"centerx": "centerx", "centery": "centery"}
-    )
+    # Create the centred narrative text box sized relative to window
+    _create_dialog_label(windowSize)
 
     running = True  # Set running flag to True to start event loop
 
@@ -88,9 +102,14 @@ def gui_print(text):
     Why this approach? It avoids second-guessing line wrapping, padding and theme
     """
     global DialogLabel
-    if not DialogLabel or not text:
-        DialogLabel.set_text(text or "")
+    if DialogLabel is None:
         return
+    if text is None:
+        text = ""
+
+    # Remember last plain text so we can restore it after a resize
+    global dialog_text_last
+    dialog_text_last = text
 
     # --- Robust fit using pygame_gui itself ---
     # We probe sizes by setting the html, rebuilding, and checking if a vertical scroll bar appears.
@@ -138,11 +157,18 @@ def pump():
             running = False  # Signal to exit main loop
 
         elif event.type == pygame.VIDEORESIZE:  # Handle window resize events
-            new_size = (max(windowMinWidth, event.w), max(windowMinHeight, event.h))  # Enforce minimum window size
-            windowSurface = pygame.display.set_mode(new_size, pygame.RESIZABLE)  # Resize window surface
-            windowSurface.fill(BG_COLOUR)  # Clear resized window with background color
-            manager.set_window_resolution(new_size)  # Inform UI manager of new window size
-            manager.clear_and_reset()  # Reset UI elements for new size
+            new_size = (max(windowMinWidth, event.w), max(windowMinHeight, event.h))
+            windowSurface = pygame.display.set_mode(new_size, pygame.RESIZABLE)
+            windowSurface.fill(BG_COLOUR)
+            manager.set_window_resolution(new_size)
+
+            # Recreate UI elements because clear_and_reset() destroys them
+            manager.clear_and_reset()
+            _create_dialog_label(new_size)
+
+            # Restore and refit the last text for the new box size
+            if dialog_text_last:
+                gui_print(dialog_text_last)
 
         manager.process_events(event)  # Pass event to UI manager for UI-specific handling
 
@@ -175,9 +201,10 @@ def DEVTOOLS():
     mouse_label.set_text(f"x:{mx} y:{my}")
 
     # Shows hitbox of DialogLabel
-    pygame.draw.rect(
-        windowSurface,
-        BORDER_COLOUR,  # Red border
-        DialogLabel.rect,
-        2  # Border thickness
-    )
+    if DialogLabel is not None:
+        pygame.draw.rect(
+            windowSurface,
+            BORDER_COLOUR,  # Red border
+            DialogLabel.rect,
+            2  # Border thickness
+        )
