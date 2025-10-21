@@ -16,6 +16,7 @@ from gui import *
 from gameParser import *
 from items import *
 from player import *
+import time
 #need to import player module
 
 
@@ -126,7 +127,8 @@ def main():
     while True:
         
         # Update the text displayed in the GUI
-        gui.gui_print("You are in a maze of twisty little passages, all alike. Next to you is the School of Computer Science and Informatics reception. The receptionist, Matt Strangis, seems to be playing an old school text-based adventure game on his computer. There are corridors leading to the south and east. The exit is to the west. <BLANKLINE> There is a pack of biscuits, a student handbook here. <BLANKLINE>")
+        gui.gui_print("You are in a maze of twisty little passages, all alike. Next to you is the School of Computer Science and Informatics reception. The receptionist, Matt Strangis, seems to be playing an old school text-based adventure game on his computer. There are corridors leading to the south and east. The exit is to the west. There is a pack of biscuits, a student handbook here.")
+        
         # Pump the GUI to keep it responsive and process events
         if not gui.pump():
             # Exit the loop if the GUI is closed or no longer responsive
