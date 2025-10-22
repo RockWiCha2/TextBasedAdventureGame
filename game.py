@@ -34,6 +34,15 @@ def print_directions(exits):
         or something similiar'''
 
 # Main game loop
+def valid_exit(exits, chosenExit):
+    return chosenExit in exits
+
+def move_player(direction):
+    if valid_exit(currentRoom["exits"], direction)==True:
+        currentRoom=rooms[currentRoom][direction]
+    else:
+        gui.gui_print("That way is blocked!")
+    #changes the global var currentRoom to the room pointed to in the dictionary
 def get_mass():
     mass = 0
     for item in inventory:
