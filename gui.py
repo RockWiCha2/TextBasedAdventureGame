@@ -17,7 +17,7 @@ import pygame_gui # type: ignore
 FPS = 60                        # target frames per second for the main loop
 BG_COLOUR = (30, 30, 36)        # window background
 BORDER_COLOUR = (255, 0, 0)     # devtools rectangle colour
-TEXTBOX_RECT = (0, 0, 1000, 500)  # default size of centre text box
+TEXTBOX_RECT = (0, 0, 100, 50)  # default size of centre text box
 TEXTBOX_MARGIN_X = 0.15  # 15% margin left/right (textbox width = 70% of window)
 TEXTBOX_MARGIN_Y = 0.2   # 20% margin top/bottom (textbox height = 60% of window)
 FONT_MIN_PX = 10
@@ -40,12 +40,14 @@ def _create_dialog_label(win_size):
     """(Re)create the centred UITextBox sized from the current window size."""
     global DialogLabel, manager
     w, h = win_size
-    rect = pygame.Rect(
-        int(w * TEXTBOX_MARGIN_X),
-        int(h * TEXTBOX_MARGIN_Y),
-        int(w * (1 - 2 * TEXTBOX_MARGIN_X)),
-        int(h * (1 - 2 * TEXTBOX_MARGIN_Y)),
-    )
+
+    # compute size from margins
+    box_w = int(w * (1 - 2 * TEXTBOX_MARGIN_X))
+    box_h = int(h * (1 - 2 * TEXTBOX_MARGIN_Y))
+
+    # IMPORTANT: x=y=0 so with centre anchors this rect is centred
+    rect = pygame.Rect(0, 0, box_w, box_h)
+
     DialogLabel = pygame_gui.elements.UITextBox(
         html_text='',
         relative_rect=rect,
@@ -134,10 +136,10 @@ def gui_print(text):
         else:
             hi = mid - FONT_STEP
 
-    # Optional tiny back-off to avoid edge flicker from rounding/layout
+    # Tiny back-off to avoid edge flicker from rounding/layout
     font_size = max(FONT_MIN_PX, best - 1)
 
-    # set the font size dynamically using pixel_size
+    # Set the font size dynamically using pixel_size
     DialogLabel.html_text = f"<font pixel_size={font_size}>{text}</font>"
     DialogLabel.rebuild()
 
@@ -178,7 +180,7 @@ def pump():
     manager.draw_ui(windowSurface)  # Draw all managed UI elements onto window surface
     
     # Devtools overlay (toggle by commenting this out)
-    DEVTOOLS()
+    # DEVTOOLS()
 
     pygame.display.flip()  # Update the entire display to show latest rendered frame
 
