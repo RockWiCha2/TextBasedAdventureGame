@@ -1,4 +1,5 @@
 from items import *
+from dungeon_map import *
 peasant = {
     "health": 100,
     "damageMult": 1,
@@ -31,4 +32,4 @@ playerClass = peasant
 inventory = [item_archer_longbow, item_fighter_longsword, item_shield_wood, item_armor_leather_set, item_potion_mana_small, item_potion_health_medium]
 #sets starting inventory
 
-currentRoom = '''add when map is made'''
+currentRoom = rooms["sealed_gate"]
