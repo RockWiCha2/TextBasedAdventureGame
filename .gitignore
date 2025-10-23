@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.DS_Store
+Assets/.DS_Store
+Assets/Fonts/.DS_Store
