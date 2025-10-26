@@ -76,6 +76,10 @@ You can enter commands directly or use the interactive interface.
 - **`game.py`** – Core game loop and logic controller.  
 - **`gameParser.py`** – Parses and validates player commands.  
 - **`gui.py`** – Builds and updates the game’s visual layout.  
+- **`dungeon_map.py`** - Provides a dictionary of different rooms in dungeon
+- **`items.py`** - Provides a dictionary for all the items the player can find
+- **`player.py`** - Provides a dictionary for all the different classes the player can be
+- **`players.py`** - Provides essential subroutines and classes for the player
 - **`Assets/`** – Stores any graphical or font resources used by the GUI.
 
 ### Collaboration Guidelines
