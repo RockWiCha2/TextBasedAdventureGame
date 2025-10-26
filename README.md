@@ -80,6 +80,8 @@ You can enter commands directly or use the interactive interface.
 - **`items.py`** - Provides a dictionary for all the items the player can find
 - **`player.py`** - Provides a dictionary for all the different classes the player can be
 - **`players.py`** - Provides essential subroutines and classes for the player
+- **`enemies.py`** – Defines the `Enemy` dataclass and a registry of enemy types with unique stats, behaviour, and descriptions.  
+  Includes helper functions for fetching and listing enemies.
 - **`Assets/`** – Stores any graphical or font resources used by the GUI.
 
 ### Collaboration Guidelines
