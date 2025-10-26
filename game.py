@@ -216,7 +216,7 @@ def menu(currentRoom):
 def open_game(currentRoom, playerClass):
     gui.gui_print("WELCOME")
     gui.gui_print("Press ENTER to start")
-    gui.get_text_input()
+    enterToStart = gui.get_text_input()
     print_current_room(currentRoom)
     while playerClass== peasant:
         playerClass = class_choice(playerClass)
@@ -254,13 +254,12 @@ def class_choice(playerClass):
 
         
 def main(currentRoom, playerClass):
+    # Initialize the GUI window and setup necessary resources
+    gui.start()
+    
     playerClass = open_game(currentRoom, playerClass)
     #runs the opening function at the start of the game
     
-        
-        
-    # Initialize the GUI window and setup necessary resources
-    gui.start()
     # Continuously run the game loop while the GUI is responsive
     while True:
         gui.gui_print(playerClass)
