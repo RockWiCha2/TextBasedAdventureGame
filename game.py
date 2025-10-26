@@ -197,16 +197,18 @@ def menu(currentRoom):
     currentRoom = execute_command(userInput, currentRoom, playerClass)
     return currentRoom
     #runs the main game menu
-def main(currentRoom):
-    '''while True:
-        currentRoom = menu(currentRoom)'''
+def main():
+    
     # Initialize the GUI window and setup necessary resources
     gui.start()
     # Continuously run the game loop while the GUI is responsive
     while True:
         
         # Update the text displayed in the GUI
-        gui.gui_print("You are in a maze of twisty little passages, all alike. Next to you is the School of Computer Science and Informatics reception. The receptionist, Matt Strangis, seems to be playing an old school text-based adventure game on his computer. There are corridors leading to the south and east. The exit is to the west. There is a pack of biscuits, a student handbook here.")
+        #gui.gui_print("You are in a maze of twisty little passages, all alike. Next to you is the School of Computer Science and Informatics reception. The receptionist, Matt Strangis, seems to be playing an old school text-based adventure game on his computer. There are corridors leading to the south and east. The exit is to the west. There is a pack of biscuits, a student handbook here.")
+        
+        #user_input = gui.get_text_input("What would you like to do?")
+        #gui.gui_print(f"You entered: {user_input}")
         
         # Pump the GUI to keep it responsive and process events
         if not gui.pump():
@@ -214,4 +216,7 @@ def main(currentRoom):
             break
 
 
-main(currentRoom)
+
+
+
+main()

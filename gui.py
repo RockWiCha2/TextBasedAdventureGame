@@ -24,6 +24,11 @@ FONT_MIN_PX = 10
 FONT_MAX_PX = 120               # upper bound for binary search font size
 FONT_STEP = 2                   # step used inside the binary search
 
+# Text input layout
+INPUT_HEIGHT = 36                 # height of the entry line in pixels
+INPUT_MARGIN_X = 0.15             # same horizontal margin as the text box (15%)
+INPUT_MARGIN_BOTTOM = 0.08        # spacing from bottom of window (8%)
+
 # === Module state (globals) ===
 windowSurface = None  # primary pygame surface (the window)
 manager = None        # pygame_gui UIManager, routes events & draws UI
@@ -35,6 +40,15 @@ windowSize = None     # cached initial window size
 mouse_label = None    # devtools: shows mouse x/y
 DialogLabel = None    # central UITextBox used for narrative text
 dialog_text_last = ""  # last text we showed; used to restore on resize
+
+def _compute_input_rect(win_size):
+    """Return a pygame.Rect for the bottom input line based on window size."""
+    w, h = win_size
+    x = int(w * INPUT_MARGIN_X)
+    width = int(w * (1 - 2 * INPUT_MARGIN_X))
+    height = INPUT_HEIGHT
+    y = int(h * (1 - INPUT_MARGIN_BOTTOM)) - height
+    return pygame.Rect(x, y, width, height)
 
 def _create_dialog_label(win_size):
     """(Re)create the centred UITextBox sized from the current window size."""
@@ -54,6 +68,88 @@ def _create_dialog_label(win_size):
         manager=manager,
         anchors={"centerx": "centerx", "centery": "centery"}
     )
+
+def get_text_input(placeholder: str = "") -> str:
+    """Show a single-line text input at the bottom and return what the user types on ENTER.
+
+    Behaviour:
+    - Focuses automatically so typing goes straight into the box.
+    - Returns the entered text only when ENTER is pressed.
+    - Clears and removes the input box before returning.
+    - Resizes with the window while active.
+    """
+    global manager, windowSurface
+
+    # Create the entry line anchored at the bottom
+    entry = pygame_gui.elements.UITextEntryLine(
+        relative_rect=_compute_input_rect(windowSurface.get_size()),
+        manager=manager,
+        anchors={"left": "left", "top": "top"}
+    )
+    if placeholder:
+        try:
+            entry.set_text(placeholder)
+            entry.select_range(0, len(placeholder))  # highlight so typing replaces it
+        except Exception:
+            pass
+
+    # Ensure the widget has keyboard focus
+    try:
+        entry.focus()
+    except Exception:
+        pass
+
+    result: str = ""
+    waiting = True
+
+    # Local loop while we wait for ENTER
+    while waiting:
+        time_delta = clock.tick(FPS) / 1000.0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                waiting = False
+                result = ""
+                break
+            elif event.type == pygame.VIDEORESIZE:
+                new_size = (max(windowMinWidth, event.w), max(windowMinHeight, event.h))
+                windowSurface = pygame.display.set_mode(new_size, pygame.RESIZABLE)
+                windowSurface.fill(BG_COLOUR)
+                # Update UI manager and reposition widgets without destroying them
+                manager.set_window_resolution(new_size)
+                # Move the entry line to the new computed rect
+                entry.set_relative_rect(_compute_input_rect(new_size))
+
+            # Pass all events to pygame_gui
+            manager.process_events(event)
+
+            # Finish event from pygame_gui when ENTER is pressed inside this entry
+            if (hasattr(pygame_gui, 'UI_TEXT_ENTRY_FINISHED') and
+                    event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED and
+                    event.ui_element == entry):
+                result = event.text
+                waiting = False
+
+        # Keep focus if we lost it (e.g., window refocus)
+        try:
+            if not entry.is_focused:
+                entry.focus()
+        except Exception:
+            pass
+
+        # Draw frame
+        windowSurface.fill(BG_COLOUR)
+        manager.update(time_delta)
+        manager.draw_ui(windowSurface)
+        pygame.display.flip()
+
+    # Clear and remove the input box before returning
+    try:
+        entry.set_text("")
+    except Exception:
+        pass
+    entry.kill()
+
+    return result
 
 def start():
     """Boot the GUI: create window, UI manager and the centred text box.
@@ -178,7 +274,7 @@ def pump():
 
     manager.update(timeDelta)  # Update UI manager state, animations, and transitions
     manager.draw_ui(windowSurface)  # Draw all managed UI elements onto window surface
-    
+
     # Devtools overlay (toggle by commenting this out)
     # DEVTOOLS()
 
