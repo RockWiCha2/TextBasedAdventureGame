@@ -80,76 +80,101 @@ def get_text_input(placeholder: str = "") -> str:
     """
     global manager, windowSurface
 
-    # Create the entry line anchored at the bottom
+    # Create the entry line UI element positioned at the bottom of the window.
+    # The rectangle for positioning is computed based on current window size and margins.
     entry = pygame_gui.elements.UITextEntryLine(
         relative_rect=_compute_input_rect(windowSurface.get_size()),
         manager=manager,
-        anchors={"left": "left", "top": "top"}
+        anchors={"left": "left", "top": "top"}  # Anchors to top-left for positioning
     )
     if placeholder:
         try:
+            # Set the initial placeholder text inside the input box.
             entry.set_text(placeholder)
-            entry.select_range(0, len(placeholder))  # highlight so typing replaces it
+            # Select all placeholder text so that typing replaces it immediately.
+            entry.select_range(0, len(placeholder))
         except Exception:
+            # Ignore any errors during placeholder setup to avoid crashes.
             pass
 
-    # Ensure the widget has keyboard focus
+    # Attempt to give keyboard focus to the text entry widget so user can type immediately.
     try:
         entry.focus()
     except Exception:
+        # Ignore exceptions if focusing fails, e.g. due to platform-specific issues.
         pass
 
-    result: str = ""
-    waiting = True
+    result: str = ""  # Initialize result string to hold user input after ENTER
+    waiting = True    # Flag to keep the input loop running until ENTER or quit
 
-    # Local loop while we wait for ENTER
+    # Enter a local event loop to process events and update UI while waiting for user input.
     while waiting:
+        # Tick the clock to regulate frame rate and get elapsed time in seconds.
         time_delta = clock.tick(FPS) / 1000.0
+
+        # Process all pending pygame events.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                # User closed the window; exit input loop and return empty string.
                 waiting = False
                 result = ""
                 break
             elif event.type == pygame.VIDEORESIZE:
+                # Handle window resize event:
+                # Compute new window size with minimum constraints.
                 new_size = (max(windowMinWidth, event.w), max(windowMinHeight, event.h))
+                # Reset the display surface with new size and resizable flag.
                 windowSurface = pygame.display.set_mode(new_size, pygame.RESIZABLE)
+                # Fill background with the defined background color.
                 windowSurface.fill(BG_COLOUR)
-                # Update UI manager and reposition widgets without destroying them
+                # Inform UI manager of the new window resolution.
                 manager.set_window_resolution(new_size)
-                # Move the entry line to the new computed rect
+                # Reposition the text entry widget according to new window size.
                 entry.set_relative_rect(_compute_input_rect(new_size))
 
-            # Pass all events to pygame_gui
+            # Pass all events to the pygame_gui manager for internal handling.
             manager.process_events(event)
 
-            # Finish event from pygame_gui when ENTER is pressed inside this entry
+            # Check for the specific pygame_gui event indicating text entry finished (ENTER pressed).
             if (hasattr(pygame_gui, 'UI_TEXT_ENTRY_FINISHED') and
                     event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED and
                     event.ui_element == entry):
+                # Retrieve the entered text from the event.
                 result = event.text
+                # Exit the input loop since user pressed ENTER.
                 waiting = False
 
-        # Keep focus if we lost it (e.g., window refocus)
+        # Ensure the text entry widget keeps keyboard focus, e.g., if window lost focus and regained.
         try:
             if not entry.is_focused:
                 entry.focus()
         except Exception:
+            # Safely ignore errors during focus management.
             pass
 
-        # Draw frame
+        # Redraw the UI frame:
+        # Clear the window surface with background color.
         windowSurface.fill(BG_COLOUR)
+        # Update the UI manager with the elapsed time for animations and state changes.
         manager.update(time_delta)
+        # Draw all UI elements onto the window surface.
         manager.draw_ui(windowSurface)
+        # Update the display to show the drawn frame.
         pygame.display.flip()
 
-    # Clear and remove the input box before returning
+    # After exiting the input loop (ENTER pressed or quit):
+    # Clear the text in the entry widget to reset its state.
     try:
         entry.set_text("")
     except Exception:
+        # Ignore any exceptions while clearing text.
         pass
+    # Remove the entry widget from the UI and free resources.
     entry.kill()
 
+    # Return the text entered by the user.
     return result
+
 
 def start():
     """Boot the GUI: create window, UI manager and the centred text box.
