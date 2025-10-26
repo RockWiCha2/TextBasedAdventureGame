@@ -87,7 +87,7 @@ def execute_take(item_id, currentRoom, playerClass):
     for i in room_items:
         if item_id == i["id"] and not item_id in inventory:
             #if the item the player input is in the room and not in the players inventory
-            if i["mass"]+mass<=playerClass[maxWeight]:
+            if i["mass"]+mass<=playerClass["maxWeight"]:
                 #if the object wont make the players inventory weigh more than the max capacity then it will pick it up
                 inventory.append(i)
                 #adds item to inventory
