@@ -1,6 +1,8 @@
-from player import *
+from players import *
+from classes import *
 from items import *
 from gameParser import *
+from enemies import *
 import random
 
 temp_bat = {
@@ -22,7 +24,12 @@ temp_warrior = {
     "shield": item_shield_iron,
     "armour": item_armor_iron_set
 }
-
+def get_weapon(inventory):
+    currentweapon = None
+    for i in inventory:
+            if i["type"]=="weapon":
+                currentWeapon = i
+    return currentWeapon
 def find_item_in_inventory(item_name_to_find):
     found_items = []
     for item in inventory: #
@@ -41,16 +48,16 @@ def start_encounter(player, monster):
     player_alive = True
     player_defending = False
 
-    player_health = player["class"]["health"]
-    player_mana = player["class"].get("mana", 0)
-    if player["class"]["name"] == "mage":  #
+    player_health = player["health"]
+    player_mana = player["mana"]
+    if player== "mage":  #
         print(f"HP: {player_health} | Mana: {player_mana}")
     else:
         print(f"HP: {player_health}")
 
-    print(f"A terrifying {monster['name']} appears!")
+    '''print(f"A terrifying", {monster["name"]} ,"appears!")'''
     while monster_alive and player_alive:
-        print("What do you want to do? (Attack, Defend, Use, Cast or Flee)")
+        print("What do you want to do? (Attack, Defend, Use or Flee)")
         raw_input = input("> ")
         userinput = normalise_input(raw_input)
         monster_turn = True
@@ -62,44 +69,44 @@ def start_encounter(player, monster):
             continue
 
         command = userinput[0]
-
+        
         if command == "attack":
             if command == "attack":
                 # --- Archer Attack Logic ---
-                if player["class"]["name"] == "archer":  #
+                if player == "archer":  #
                     quiver = find_quiver_in_inventory()
 
                     if quiver and quiver.get("ammo", 0) > 0:
                         quiver["ammo"] -= 1  # Deplete one arrow
 
-                        print(f"You fire an arrow from your {player['weapon']['name']}!")
-                        totalDamage = player["class"]["damageMult"] * player["weapon"]["damage"] - monster["block"]  #
+                        print(f"You fire an arrow from your {currentWeapon['name']}!")
+                        totalDamage = player["damageMult"] * currentWeapon["damage"]  #
                         if totalDamage < 0: totalDamage = 0
 
                         print(f"You hit {monster['name']} with {totalDamage} damage.")  #
                         print(f"(You have {quiver['ammo']} arrows left.)")
-                        monster["health"] -= totalDamage  #
+                        enemies[monster]["health"] -= totalDamage  #
                     else:
                         print("You're out of arrows! You bash the enemy with your bow.")
                         totalDamage = 2
-                        print(f"You hit {monster['name']} with {totalDamage} damage.")  #
-                        monster["health"] -= totalDamage  #
+                        print("You hit", monster,"with",totalDamage,"damage.")  #
+                        enemies[monster]["health"] -= totalDamage  #
 
                 # --- Fighter / Mage Melee Logic ---
                 else:
-                    if player["class"]["name"] == "mage":  #
+                    if player == "mage":  #
                         print("You swing your staff...")
-                        totalDamage = player["weapon"].get("damage", 1) - monster["block"]
+                        totalDamage = currentWeapon["damage"]
                     else:
-                        print(f"You swing your {player["weapon"]["name"]}.")
-                        totalDamage = player["class"]["damageMult"] * player["weapon"]["damage"] - monster["block"]  #
+                        print(f"You swing your", currentWeapon["name"])
+                        totalDamage = player["damageMult"] * currentWeapon["damage"]#
 
                     if totalDamage < 0: totalDamage = 0
 
-                    print(f"You hit {monster['name']} with {totalDamage} damage.")  #
-                    monster["health"] -= totalDamage  #
+                    print("You hit", monster,"with",totalDamage,"damage.")  #
+                    enemies[monster]["health"] -= totalDamage  #
 
-                print(f"The {monster['name']} now has {monster['health']} health.")  #
+                print("The", monster,"now has",enemies[monster]["health"],"health.")  #
 
         elif command == "cast":
             if player["class"]["name"] != "mage":  #
@@ -176,20 +183,20 @@ def start_encounter(player, monster):
             print("You hesitate, unsure of what to do.")
             monster_turn = False
 
-        if monster["health"] <= 0:
-            print(f"\nYou have defeated the {monster['name']}!")
+        if enemies[monster]["health"] <= 0:
+            print("You have defeated the", enemies[monster]["name"],"!")
             monster_alive = False
             monster_turn = False
 
         if monster_turn:
-            print(f"\nThe {monster['name']} attacks you!")
-            player_block = player["armour"].get("block", 0) + player["shield"].get("block", 0)
+            print("The" ,enemies[monster]["name"]," attacks you!")
+            player_block = currentArmor["block"]
             if player_defending:
                 player_block *= 2
                 print("Your defensive stance softens the blow!")
                 player_defending = False
 
-            monster_damage = monster["damage"] - player_block
+            monster_damage = roll_damage(enemies[monster]) - player_block
             if monster_damage < 0: monster_damage = 0
 
             player_health -= monster_damage
