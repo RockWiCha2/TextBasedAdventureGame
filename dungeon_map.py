@@ -48,7 +48,7 @@ room_armory = {
     and the enchanted robes of a MAGE. Use the "take" command to take your gear and start your adventure!""",
     "exits": {"south": "common_room"},
     "enemy": None,
-    "items": [fighter_starter_set, archer_starter_set, mage_starter_set] #
+    "items": [] #
 }
 
 room_hideout_exit = {
