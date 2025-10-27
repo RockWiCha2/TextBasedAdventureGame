@@ -1,3 +1,5 @@
+from items import * # Import items to be placed in rooms
+
 start_room = "sealed_gate"
 
 room_sealed_gate = {
@@ -8,7 +10,9 @@ whistles through hairline cracks, carrying the smell of old dust. A tarnished
 ring of keys hangs from a nail, all of them the wrong shape for this door.
 Scratches on the floor suggest the slab once slid aside. A rough passage runs
 north, and a low crawlspace continues east.""",
-    "exits": {"north": "ladder_shaft", "east": "fungal_niche"}
+    "exits": {"north": "ladder_shaft", "east": "fungal_niche"},
+    "enemy": None,
+    "items": [] # Starting room has no items
 }
 
 room_ladder_shaft = {
@@ -18,7 +22,9 @@ room_ladder_shaft = {
 out a faint rectangle of light far overhead, well beyond reach. Someone has
 chiseled tally marks into the wall at shoulder height. A coil of rotten rope
 lies in a heap, better left untouched. Passages run north, east, and south.""",
-    "exits": {"north": "collapsed_corridor", "east": "scribe_cell", "south": "sealed_gate"}
+    "exits": {"north": "collapsed_corridor", "east": "scribe_cell", "south": "sealed_gate"},
+    "enemy": "bandit",
+    "items": []
 }
 
 room_collapsed_corridor = {
@@ -29,7 +35,9 @@ rubble. A draft hisses through gaps between stones, making a sound like distant
 whispers. Faded arrows painted on the wall point in several directions, none
 particularly trustworthy. A battered lantern hook suggests this was once busy.
 Exits lead north, east, and south.""",
-    "exits": {"north": "watch_post", "east": "antechamber", "south": "ladder_shaft"}
+    "exits": {"north": "watch_post", "east": "antechamber", "south": "ladder_shaft"},
+    "enemy": "skeleton",
+    "items": [item_potion_health_small]
 }
 
 room_watch_post = {
@@ -40,7 +48,9 @@ on three legs, the fourth carefully carved into a makeshift wedge nearby.
 Old dice lie in a shallow bowl, all showing different numbers of pips than they
 should. The room is quiet, and the slit admits only a stripe of chill air.
 You can go east or south from here.""",
-    "exits": {"east": "guardroom", "south": "collapsed_corridor"}
+    "exits": {"east": "guardroom", "south": "collapsed_corridor"},
+    "enemy": None,
+    "items": [item_potion_health_medium] # A reward in a safe room
 }
 
 room_guardroom = {
@@ -51,7 +61,9 @@ lists shifts in a hand that gets steadily sloppier near the end. The remains of
 a card game are scattered on a barrel-top, one card burned around its edges.
 A dented gong hangs from a beam, mercifully silent. Doorways open west, east,
 and south.""",
-    "exits": {"west": "watch_post", "east": "armory", "south": "antechamber"}
+    "exits": {"west": "watch_post", "east": "armory", "south": "antechamber"},
+    "enemy": "knight",
+    "items": [item_shield_iron, item_key_mountain_hall, ]
 }
 
 room_armory = {
@@ -61,7 +73,9 @@ room_armory = {
 practice blades lie underfoot, more hazard than help. Someone has carved a
 simple map into a beam, but half of it has flaked away. A crate rattles when
 nudged, though nothing comes out. You can head west or south.""",
-    "exits": {"west": "guardroom", "south": "cistern"}
+    "exits": {"west": "guardroom", "south": "cistern"},
+    "enemy": None,
+    "items": [item_fighter_greatsword, item_armor_iron_set] # Logical place for gear
 }
 
 room_antechamber = {
@@ -71,7 +85,9 @@ room_antechamber = {
 overlap in dusty loops as if patrols once circled here endlessly. A niche holds
 a chipped basin, dry for years. The air tastes faintly metallic, like old keys.
 Corridors lead north, east, south, and west.""",
-    "exits": {"north": "guardroom", "east": "cistern", "south": "scribe_cell", "west": "collapsed_corridor"}
+    "exits": {"north": "guardroom", "east": "cistern", "south": "scribe_cell", "west": "collapsed_corridor"},
+    "enemy": "dragon",
+    "items": [] # Boss room is clear of items
 }
 
 room_cistern = {
@@ -81,7 +97,9 @@ room_cistern = {
 of white crust. A bucket on a chain hangs just above the basin, immovable.
 Drips tick somewhere out of sight, maddeningly irregular. Moss clings to the
 lower stones where the light never reaches. Exits go north, west, and south.""",
-    "exits": {"north": "armory", "west": "antechamber", "south": "crypt"}
+    "exits": {"north": "armory", "west": "antechamber", "south": "crypt"},
+    "enemy": "ghost",
+    "items": [item_potion_mana_small]
 }
 
 room_scribe_cell = {
@@ -92,7 +110,9 @@ door levers, lantern hooks, and tally marks are scattered like fallen leaves.
 The ink is dry and dusty, yet your fingertips come away faintly smudged.
 A tiny shelf holds a blank seal and a broken quill. You can go north, east,
 south, or west.""",
-    "exits": {"north": "antechamber", "east": "crypt", "south": "fungal_niche", "west": "ladder_shaft"}
+    "exits": {"north": "antechamber", "east": "crypt", "south": "fungal_niche", "west": "ladder_shaft"},
+    "enemy": None,
+    "items": [item_spell_icespike] # A spell for a mage to find
 }
 
 room_crypt = {
@@ -102,7 +122,9 @@ room_crypt = {
 smoother here, as if many careful steps wore it down over years. A draft slips
 through the seams and brings a smell like old paper. A single candle stub rests
 in a niche, eternally unlit. Passages lead north, west, and south.""",
-    "exits": {"north": "cistern", "west": "scribe_cell", "south": "treasury"}
+    "exits": {"north": "cistern", "west": "scribe_cell", "south": "treasury"},
+    "enemy": "stone_golem",
+    "items": [item_mage_arcane_staff] # Powerful item in a tough room
 }
 
 room_fungal_niche = {
@@ -112,7 +134,9 @@ room_fungal_niche = {
 A few are bruised where someone tested their texture and thought better of it.
 Your footsteps are quiet here, swallowed by soft growth. The ceiling dips low,
 forcing a slight stoop. Ways lead north, east, and west.""",
-    "exits": {"north": "scribe_cell", "east": "treasury", "west": "sealed_gate"}
+    "exits": {"north": "scribe_cell", "east": "treasury", "west": "sealed_gate"},
+    "enemy": "giant_bat",
+    "items": [item_potion_health_small]
 }
 
 room_treasury = {
@@ -122,7 +146,9 @@ room_treasury = {
 A ledger lies on a stand, every value neatly recorded and then crossed out.
 One chest’s hinge squeals when touched, loud enough to feel unwise. Dust motes
 turn in the thin light from a high grate. Exits are to the north and west.""",
-    "exits": {"north": "crypt", "west": "fungal_niche"}
+    "exits": {"north": "crypt", "west": "fungal_niche"},
+    "enemy": "witch",
+    "items": [item_potion_mana_medium, item_potion_health_medium] # Good potions as a reward
 }
 
 # --- Master room registry using themed lowercase_underscore keys ---
