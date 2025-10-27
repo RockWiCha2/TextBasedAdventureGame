@@ -1,4 +1,3 @@
-
 # Fantasy Items (Weapons, Spells, Armour, Potions, Keys) 
 
 
@@ -242,19 +241,26 @@ item_potion_mana_medium = {
 }
 
 # Key items
-
-item_knights_crest = {
-    "id": "crest",
-    "name": "a Knight's Crest",
-    "description": "A heavy steel emblem, warm to the touch. It represents a solemn vow to guard the kingdom.",
-    "mass": 0.2,
+item_key_castle = {
+    "id": "castlekey",
+    "name": "the castle key",
+    "description": "A heavy iron key that opens the castle gate.",
+    "mass": 0.1,
     "type": "key"
 }
 
-item_witchs_charm = {
-    "id": "charm",
-    "name": "a Witch's Charm",
-    "description": "A small, twisted effigy made of wicker and raven feathers. It hums with a strange, dark energy.",
+item_key_mountain_hall = {
+    "id": "mountainkey",
+    "name": "the Hall of the Mountain King key",
+    "description": "An ancient brass key engraved with runes.",
+    "mass": 0.1,
+    "type": "key"
+}
+
+item_lizard_tongue = {
+    "id": "lizardtongue",
+    "name": "a lizard's tongue",
+    "description": "A rare alchemical reagent for the witch's cauldron.",
     "mass": 0.1,
     "type": "key"
 }
@@ -293,7 +299,7 @@ items_potions = [
     item_potion_mana_small, item_potion_mana_medium
 ]
 
-items_keys = [item_knights_crest, item_witchs_charm]
+items_keys = [item_key_castle, item_key_mountain_hall, item_lizard_tongue]
 
 # Convenience list of all fantasy items
 fantasy_items = items_weapons + items_spells + items_armours + items_potions + items_keys + [item_quiver_arrows]
