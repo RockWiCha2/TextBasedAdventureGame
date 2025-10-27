@@ -93,7 +93,7 @@ room_witchs_cabin = {
     arcane ingredients. A wizened witch cackles as you enter, her fingers crackling with dark energy.""",
     "exits": {"east": "murky_swamp"},
     "enemy": "witch", #
-    "items": [item_witchs_charm, item_spell_lightning] # The Witch's key and a spell reward.
+    "items": [item_spell_lightning] # The Witch's key and a spell reward.
 }
 
 # --- 3B. The Knight's Castle (East Path) ---
@@ -125,7 +125,7 @@ room_throne_room = {
     armor blackened by some terrible magic. He raises his greatsword, honor-bound to defend this place to the death.""",
     "exits": {"south": "castle_barracks"},
     "enemy": "knight", #
-    "items": [item_knights_crest, item_fighter_greatsword] # The Knight's key and a weapon reward.
+    "items": [item_fighter_greatsword] # The Knight's key and a weapon reward.
 }
 
 # --- 4. The Dragon's Peak (Final Area) ---
