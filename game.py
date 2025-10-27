@@ -31,7 +31,7 @@ def print_directions(exits):
     ''' itterate through all available exits and output them
     must wait until map is done and exits are in place'''
     for ex in exits:
-            gui.gui_print("GO", ex,"to Travel to", exits[ex])
+            print("GO", ex,"to Travel to", exits[ex])
 
 # Main game loop
 def valid_exit(exits, chosenExit):
@@ -41,7 +41,7 @@ def move_player(direction, currentRoom):
     if valid_exit(currentRoom["exits"], direction)==True:
         currentRoom=rooms[currentRoom][direction]
     else:
-        gui.gui_print("That way is blocked!")
+        print("That way is blocked!")
     return currentRoom
     #changes the global var currentRoom to the room pointed to in the dictionary
 def get_mass():
@@ -54,32 +54,32 @@ def get_mass():
 
 def print_inventory():
     invMass = get_mass()
-    gui.gui_print("PLAYER INVENTORY",invMass,"/",playerClass["maxWeight"],"KG")
+    print("PLAYER INVENTORY",invMass,"/",playerClass["maxWeight"],"KG")
     #outputs the title inventory and how much space is left
-    gui.gui_print("==============================")
-    gui.gui_print()
+    print("==============================")
+    print()
     for item in inventory:
     
-        gui.gui_print(item["name"].upper()+"(",item["mass"],"kg)")
+        print(item["name"].upper()+"(",item["mass"],"kg)")
         
         if item["type"]=="weapon":
-            gui.gui_print("DMG:",item["damage"])
+            print("DMG:",item["damage"])
         elif item["type"]=="armor":
-            gui.gui_print("BLOCK:",item["block"])
+            print("BLOCK:",item["block"])
         elif item["type"]=="shield":
-            gui.gui_print("BLOCK:",item["block"])
+            print("BLOCK:",item["block"])
         elif item["type"]=="health_potion":
-            gui.gui_print("RESTORATION:",item["restore_hp"],"HEALTH")
+            print("RESTORATION:",item["restore_hp"],"HEALTH")
         elif item["type"]=="mana_potion":
-            gui.gui_print("RESTORATION:",item["restore_mana"],"MANA")
-        gui.gui_print()
+            print("RESTORATION:",item["restore_mana"],"MANA")
+        print()
         #finds out the type of each item and outputs appropriate stats for them
         #can be changed to output more stats later
                 
 
 #All these functions check what the item is in inventory to decide the appropriate output
 def execute_take(item_id, currentRoom, playerClass):
-    gui.gui_print(item_id)
+    print(item_id)
     room_items = currentRoom["items"]
     #sets a variable for the items the room holds
     mass = get_mass(inventory)
@@ -93,11 +93,11 @@ def execute_take(item_id, currentRoom, playerClass):
                 #adds item to inventory
                 currentRoom["items"].remove(i)
                 #removes item from room
-                gui.gui_print("You have taken", item_id)
+                print("You have taken", item_id)
             else:
-                gui.gui_print("That is too heavy to carry!")
+                print("That is too heavy to carry!")
         else:
-            gui.gui_print("That is not a valid item to take in this room!!")
+            print("That is not a valid item to take in this room!!")
     
     
 def execute_drop(item_id, currentRoom):
@@ -109,7 +109,7 @@ def execute_drop(item_id, currentRoom):
             #add the item to the room items
             inventory.remove(i)
             #removes item from inventory
-            gui.gui_print("You have dropped", item_id,"in",currentRoom["name"])
+            print("You have dropped", item_id,"in",currentRoom["name"])
             
 def execute_go(direction, currentRoom):
     
@@ -121,7 +121,7 @@ def execute_go(direction, currentRoom):
         #the current room becomes the next room
         
     else:
-        gui.gui_print("That is not a valid direction for an exit!!")
+        print("That is not a valid direction for an exit!!")
     print_current_room(currentRoom)
     #outputs
     return currentRoom
@@ -130,7 +130,7 @@ def execute_go(direction, currentRoom):
    
 def execute_command(command, currentRoom, playerClass):
     if 0 == len(command):
-        gui.gui_print("You must enter an input")
+        print("You must enter an input")
         return
     if command[0] == "open":
         #when the first word input is open these will run
@@ -145,7 +145,7 @@ def execute_command(command, currentRoom, playerClass):
                 #if the following word is stats it outputs the players stats
                 print_stats(playerClass)
         else:
-            gui.gui_print("Open what??")
+            print("Open what??")
         
         
 
@@ -155,12 +155,11 @@ def execute_command(command, currentRoom, playerClass):
             currentRoom = execute_go(command[1], currentRoom)
             #changes the current room variable to the output of the execute_go function
         else:
-            gui.gui_print("Go where?")
-    else:
-        gui.gui_print("This makes no sense.")
-    return currentRoom
+            print("Go where?")
+    
+        
 
-'''
+
     elif command[0] == "take":
         if len(command) > 1:
             execute_take(command[1], currentRoom, playerClass)
@@ -172,8 +171,10 @@ def execute_command(command, currentRoom, playerClass):
             execute_drop(command[1], currentRoom)
         else:
             print("Drop what?")
-'''
+    else:
+        print("This makes no sense.")
 
+    return currentRoom
 
    
 def move(exits, direction):
@@ -182,25 +183,25 @@ def move(exits, direction):
         return rooms[exits[direction]]
 
 def print_current_room(currentRoom):
-    gui.gui_print()
-    gui.gui_print("Location:", currentRoom["name"])
-    gui.gui_print(currentRoom["description"])
+    print()
+    print("Location:", currentRoom["name"])
+    print(currentRoom["description"])
     #outputs name and description of a room
 
 def get_user_input():
     userChoice = gui.get_text_input("What would you like to do? ")
     normalised = normalise_input(userChoice)
     #returns normalised text as an array of words
-    gui.gui_print()
+    print()
     return normalised
     #gets input and normalises it
 def print_menu(currentRoom):
     exitString = get_exits(currentRoom["exits"])
-    gui.gui_print()
-    gui.gui_print("You can:")
-    gui.gui_print()
-    gui.gui_print("||OPEN INVENT0RY||  ||OPEN MAP|| ||OPEN STATS||")
-    gui.gui_print(exitString)
+    print()
+    print("You can:")
+    print()
+    print("||OPEN INVENT0RY||  ||OPEN MAP|| ||OPEN STATS||")
+    print(exitString)
     
 def get_exits(exits):
     string = ""
@@ -214,30 +215,30 @@ def menu(currentRoom):
     return currentRoom
 
 def open_game(currentRoom, playerClass):
-    gui.gui_print("WELCOME")
-    gui.gui_print("Press ENTER to start")
+    print("WELCOME")
+    print("Press ENTER to start")
     enterToStart = gui.get_text_input()
     print_current_room(currentRoom)
     while playerClass== peasant:
         playerClass = class_choice(playerClass)
-    gui.gui_print("Good choice")
-    gui.gui_print("STATS:")
-    gui.gui_print(playerClass)
+    print("Good choice")
+    print("STATS:")
+    print(playerClass)
     print_stats(playerClass)
     #runs the opeining game sequence
     return playerClass
 #runs the main game menu
 
 def print_stats(playerClass):
-    gui.gui_print()
-    gui.gui_print("HEALTH:",playerClass["health"])
-    gui.gui_print()
-    gui.gui_print("Damage multiplier:", playerClass["damageMult"],"X")
-    gui.gui_print()
+    print()
+    print("HEALTH:",playerClass["health"])
+    print()
+    print("Damage multiplier:", playerClass["damageMult"],"X")
+    print()
 def class_choice(playerClass):
-    gui.gui_print()
-    gui.gui_print("Infront of you the wall shows 3 armour stands. One bears a large hulking armour that can withstand many strikes, one bears a light leather uniform designed for speed and deadlyness, and the final stand holds a robe that emmits magical properties:")
-    gui.gui_print("Choose either the BARBARIAN, ARCHER OR MAGE:")
+    print()
+    print("Infront of you the wall shows 3 armour stands. One bears a large hulking armour that can withstand many strikes, one bears a light leather uniform designed for speed and deadlyness, and the final stand holds a robe that emmits magical properties:")
+    print("Choose either the BARBARIAN, ARCHER OR MAGE:")
     choice = gui.get_text_input()
     #gets the users input on what class they wish to pick
     normChoice = normalise_input(choice)
@@ -255,6 +256,10 @@ def class_choice(playerClass):
         
 def main(currentRoom, playerClass):
     # Initialize the GUI window and setup necessary resources
+    while True:
+        print(playerClass)
+        currentRoom = menu(currentRoom)
+    '''
     gui.start()
     
     playerClass = open_game(currentRoom, playerClass)
@@ -262,7 +267,7 @@ def main(currentRoom, playerClass):
     
     # Continuously run the game loop while the GUI is responsive
     while True:
-        gui.gui_print(playerClass)
+        print(playerClass)
         currentRoom = menu(currentRoom)
         # Update the text displayed in the GUI
         
@@ -270,7 +275,7 @@ def main(currentRoom, playerClass):
         if not gui.pump():
             # Exit the loop if the GUI is closed or no longer responsive
             break
-
+    '''
 
 main(currentRoom, playerClass)
 
