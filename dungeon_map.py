@@ -1,168 +1,181 @@
-from items import * # Import items to be placed in rooms
+from items import *
+from enemies import *
 
-start_room = "sealed_gate"
+# The player will begin in the cell of the bandit hideout.
+start_room = "kidnapped_cell"
 
-room_sealed_gate = {
-    "name": "Sealed Gate",
+# --- 1. Bandit Hideout (Tutorial Area) ---
+
+room_kidnapped_cell = {
+    "name": "Kidnapped Cell",
     "description":
-    """A stone arch blocks the way with a slab etched in worn runes. A tiny draft
-whistles through hairline cracks, carrying the smell of old dust. A tarnished
-ring of keys hangs from a nail, all of them the wrong shape for this door.
-Scratches on the floor suggest the slab once slid aside. A rough passage runs
-north, and a low crawlspace continues east.""",
-    "exits": {"north": "ladder_shaft", "east": "fungal_niche"},
+    """You awaken on a cold stone floor, head throbbing. The room is small and bare, save for a pile of straw and a 
+    heavy wooden door to the north. Still wondering how you got here you decide to investigate by trying to pry open the
+    door. Use "go north" to move to the next room. """,
+    "exits": {"north": "storage_room"},
     "enemy": None,
-    "items": [] # Starting room has no items
-}
-
-room_ladder_shaft = {
-    "name": "Ladder Shaft",
-    "description":
-    """An open shaft yawns above, its rungs warped and slick with age. You can make
-out a faint rectangle of light far overhead, well beyond reach. Someone has
-chiseled tally marks into the wall at shoulder height. A coil of rotten rope
-lies in a heap, better left untouched. Passages run north, east, and south.""",
-    "exits": {"north": "collapsed_corridor", "east": "scribe_cell", "south": "sealed_gate"},
-    "enemy": "bandit",
     "items": []
 }
 
-room_collapsed_corridor = {
-    "name": "Collapsed Corridor",
+room_storage_room = {
+    "name": "Dusty Storage Room",
     "description":
-    """Most of the ceiling has given way here, forming an ankle-twisting ridge of
-rubble. A draft hisses through gaps between stones, making a sound like distant
-whispers. Faded arrows painted on the wall point in several directions, none
-particularly trustworthy. A battered lantern hook suggests this was once busy.
-Exits lead north, east, and south.""",
-    "exits": {"north": "watch_post", "east": "antechamber", "south": "ladder_shaft"},
-    "enemy": "skeleton",
+    """The door opens into a small storeroom filled with crates of stale rations and cheap ale. It smells of damp earth. 
+    There is a doorway leading east into what sounds like a larger common area. You think you can hear someone moving 
+    around. Maybe its one of your captors?""",
+    "exits": {"south": "kidnapped_cell", "east": "common_room"},
+    "enemy": None,
     "items": [item_potion_health_small]
 }
 
-room_watch_post = {
-    "name": "Watch Post",
+room_common_room = {
+    "name": "Bandit Common Room",
     "description":
-    """A narrow alcove overlooks the corridor through a murder slit. A stool rests
-on three legs, the fourth carefully carved into a makeshift wedge nearby.
-Old dice lie in a shallow bowl, all showing different numbers of pips than they
-should. The room is quiet, and the slit admits only a stripe of chill air.
-You can go east or south from here.""",
-    "exits": {"east": "guardroom", "south": "collapsed_corridor"},
-    "enemy": None,
-    "items": [item_potion_health_medium] # A reward in a safe room
-}
-
-room_guardroom = {
-    "name": "Guardroom",
-    "description":
-    """Hooks line the walls where helmets once hung in tidy rows. A chalk board
-lists shifts in a hand that gets steadily sloppier near the end. The remains of
-a card game are scattered on a barrel-top, one card burned around its edges.
-A dented gong hangs from a beam, mercifully silent. Doorways open west, east,
-and south.""",
-    "exits": {"west": "watch_post", "east": "armory", "south": "antechamber"},
-    "enemy": "knight",
-    "items": [item_shield_iron, item_key_mountain_hall, ]
+    """This is the bandits' main living space. A crude wooden table is surrounded by stools, and playing cards are 
+    scattered across its surface. A bored-looking bandit guard stands between you and a door to the north. 
+    To the east is a heavy door that seems to lead outside. As  you take a step into the room the bandit runs at you!
+    Its time to fight! Use "attack" to hit the enemy """,
+    "exits": {"west": "storage_room", "north": "armory", "east": "hideout_exit"},
+    "enemy": "bandit", #
+    "items": []
 }
 
 room_armory = {
-    "name": "Armory",
+    "name": "Bandit Armory",
     "description":
-    """Empty racks stand like ribs, their pegs stained with dark oil. A few blunt
-practice blades lie underfoot, more hazard than help. Someone has carved a
-simple map into a beam, but half of it has flaked away. A crate rattles when
-nudged, though nothing comes out. You can head west or south.""",
-    "exits": {"west": "guardroom", "south": "cistern"},
+    """This small room is cluttered with stolen goods. On three crates in the center, 
+    three distinct sets of gear are displayed: the heavy plate of a FIGHTER, the swift leather of an ARCHER, 
+    and the enchanted robes of a MAGE. Use the "take" command to take your gear and start your adventure!""",
+    "exits": {"south": "common_room"},
     "enemy": None,
-    "items": [item_fighter_greatsword, item_armor_iron_set] # Logical place for gear
+    "items": [fighter_starter_set, archer_starter_set, mage_starter_set] #
 }
 
-room_antechamber = {
-    "name": "Antechamber",
+room_hideout_exit = {
+    "name": "Hideout Exit",
     "description":
-    """A modest hall with sagging banners and a cracked floor mosaic. Footprints
-overlap in dusty loops as if patrols once circled here endlessly. A niche holds
-a chipped basin, dry for years. The air tastes faintly metallic, like old keys.
-Corridors lead north, east, south, and west.""",
-    "exits": {"north": "guardroom", "east": "cistern", "south": "scribe_cell", "west": "collapsed_corridor"},
-    "enemy": "dragon",
-    "items": [] # Boss room is clear of items
+    """You push the heavy door open and are greeted by the fresh, cold air of the mountains. You've escaped the hideout.
+    A narrow path leads north into the wilderness.""",
+    "exits": {"west": "common_room", "north": "forest_clearing"},
+    "enemy": None,
+    "items": []
 }
 
-room_cistern = {
-    "name": "Cistern",
+# --- 2. The Wilderness Hub ---
+
+room_forest_clearing = {
+    "name": "Forest Clearing",
     "description":
-    """A stone pool sits in the center, its water long since evaporated to a ring
-of white crust. A bucket on a chain hangs just above the basin, immovable.
-Drips tick somewhere out of sight, maddeningly irregular. Moss clings to the
-lower stones where the light never reaches. Exits go north, west, and south.""",
-    "exits": {"north": "armory", "west": "antechamber", "south": "crypt"},
-    "enemy": "ghost",
+    """The path opens into a quiet clearing. A circle of mossy stones suggests this place was once sacred. 
+    Now, it feels eerie and abandoned. Paths lead west into a murky swamp, east towards a fortified castle, and north to
+    the base of the Dragon's Peak.""",
+    "exits": {"south": "hideout_exit", "west": "murky_swamp", "east": "knights_castle_drawbridge", "north": "dragon_peak_trail"},
+    "enemy": None, # A safe zone hub.
     "items": [item_potion_mana_small]
 }
 
-room_scribe_cell = {
-    "name": "Scribe Cell",
+# --- 3A. The Witch's Cabin (West Path) ---
+
+room_murky_swamp = {
+    "name": "Murky Swamp",
     "description":
-    """A cramped cell with a slanted desk and a sand tray for blotting. Notes about
-door levers, lantern hooks, and tally marks are scattered like fallen leaves.
-The ink is dry and dusty, yet your fingertips come away faintly smudged.
-A tiny shelf holds a blank seal and a broken quill. You can go north, east,
-south, or west.""",
-    "exits": {"north": "antechamber", "east": "crypt", "south": "fungal_niche", "west": "ladder_shaft"},
+    """The ground turns to mud and stagnant water. Twisted trees reach out like grasping claws, and the air is thick 
+    with the buzz of insects. A ghostly light flickers in the distance to the west.""",
+    "exits": {"east": "forest_clearing", "west": "witchs_cabin"},
+    "enemy": "ghost", #
+    "items": []
+}
+
+room_witchs_cabin = {
+    "name": "Witch's Cabin",
+    "description":
+    """A dilapidated cabin stands on stilts above the swamp water. Inside, shelves are crammed with strange potions and 
+    arcane ingredients. A wizened witch cackles as you enter, her fingers crackling with dark energy.""",
+    "exits": {"east": "murky_swamp"},
+    "enemy": "witch", #
+    "items": [item_witchs_charm, item_spell_lightning] # The Witch's key and a spell reward.
+}
+
+# --- 3B. The Knight's Castle (East Path) ---
+
+room_knights_castle_drawbridge = {
+    "name": "Knight's Castle Drawbridge",
+    "description":
+    """A solid stone castle stands before you, its drawbridge lowered across a deep moat. 
+    The banners hanging from its walls are tattered but noble. Skeletons of fallen soldiers patrol the entrance.""",
+    "exits": {"west": "forest_clearing", "north": "castle_barracks"},
+    "enemy": "skeleton", #
+    "items": []
+}
+
+room_castle_barracks = {
+    "name": "Castle Barracks",
+    "description":
+    """The barracks are orderly but empty. Weapon racks line the walls, and training dummies stand riddled with sword-cuts. 
+    A large door to the north leads to the throne room.""",
+    "exits": {"south": "knights_castle_drawbridge", "north": "throne_room"},
     "enemy": None,
-    "items": [item_spell_icespike] # A spell for a mage to find
+    "items": [item_armor_iron_set] #
 }
 
-room_crypt = {
-    "name": "Crypt",
+room_throne_room = {
+    "name": "Throne Room",
     "description":
-    """Recesses in the walls hold nameless stone lids, all identical. The floor is
-smoother here, as if many careful steps wore it down over years. A draft slips
-through the seams and brings a smell like old paper. A single candle stub rests
-in a niche, eternally unlit. Passages lead north, west, and south.""",
-    "exits": {"north": "cistern", "west": "scribe_cell", "south": "treasury"},
-    "enemy": "stone_golem",
-    "items": [item_mage_arcane_staff] # Powerful item in a tough room
+    """This was once a grand throne room, but now it is a place of sorrow. A disgraced, Fallen Knight stands guard, his 
+    armor blackened by some terrible magic. He raises his greatsword, honor-bound to defend this place to the death.""",
+    "exits": {"south": "castle_barracks"},
+    "enemy": "knight", #
+    "items": [item_knights_crest, item_fighter_greatsword] # The Knight's key and a weapon reward.
 }
 
-room_fungal_niche = {
-    "name": "Fungal Niche",
+# --- 4. The Dragon's Peak (Final Area) ---
+
+room_dragon_peak_trail = {
+    "name": "Dragon's Peak Trail",
     "description":
-    """Pale caps crowd the corners, spreading in perfect circles around old drips.
-A few are bruised where someone tested their texture and thought better of it.
-Your footsteps are quiet here, swallowed by soft growth. The ceiling dips low,
-forcing a slight stoop. Ways lead north, east, and west.""",
-    "exits": {"north": "scribe_cell", "east": "treasury", "west": "sealed_gate"},
-    "enemy": "giant_bat",
-    "items": [item_potion_health_small]
+    """A steep, winding trail leads up the side of a soot-stained mountain. The air grows warmer and carries the scent 
+    of brimstone. The path is guarded by a massive stone golem, animated by the dragon's magic.""",
+    "exits": {"south": "forest_clearing", "up": "great_hall"},
+    "enemy": "stone_golem", #
+    "items": []
 }
 
-room_treasury = {
-    "name": "Treasury",
+room_great_hall = {
+    "name": "The Great Hall",
     "description":
-    """Iron-banded chests line the walls, most pried open and disappointingly empty.
-A ledger lies on a stand, every value neatly recorded and then crossed out.
-One chest’s hinge squeals when touched, loud enough to feel unwise. Dust motes
-turn in the thin light from a high grate. Exits are to the north and west.""",
-    "exits": {"north": "crypt", "west": "fungal_niche"},
-    "enemy": "witch",
-    "items": [item_potion_mana_medium, item_potion_health_medium] # Good potions as a reward
+    """You enter the dragon's fortress. This was once a magnificent hall, but now its banners are burned and the long 
+    tables are overturned. At the far end, a massive, magically sealed door pulses with a faint light. It seems to 
+    require two powerful artifacts to open.""",
+    "exits": {"down": "dragon_peak_trail", "north": "dragon_lair"},
+    "enemy": None,
+    "items": []
 }
 
-# --- Master room registry using themed lowercase_underscore keys ---
+room_dragon_lair = {
+    "name": "Dragon's Lair",
+    "description":
+    """You open the door into a vast, cavernous chamber. The roof has collapsed, revealing the stormy sky above. 
+    In the center of the room, a colossal Ashen Dragon coils around a pile of treasure. Cowering nearby is your friend, 
+    Kirill!""",
+    "exits": {"south": "great_hall"},
+    "enemy": "dragon", #
+    "items": []
+}
+
+# --- Master Room Registry ---
 rooms = {
-    "sealed_gate": room_sealed_gate,
-    "ladder_shaft": room_ladder_shaft,
-    "collapsed_corridor": room_collapsed_corridor,
-    "watch_post": room_watch_post,
-    "guardroom": room_guardroom,
+    "kidnapped_cell": room_kidnapped_cell,
+    "storage_room": room_storage_room,
+    "common_room": room_common_room,
     "armory": room_armory,
-    "antechamber": room_antechamber,
-    "cistern": room_cistern,
-    "scribe_cell": room_scribe_cell,
-    "crypt": room_crypt,
-    "fungal_niche": room_fungal_niche,
-    "treasury": room_treasury,
+    "hideout_exit": room_hideout_exit,
+    "forest_clearing": room_forest_clearing,
+    "murky_swamp": room_murky_swamp,
+    "witches_cabin": room_witchs_cabin,
+    "knights_castle_drawbridge": room_knights_castle_drawbridge,
+    "castle_barracks": room_castle_barracks,
+    "throne_room": room_throne_room,
+    "dragon_peak_trail": room_dragon_peak_trail,
+    "great_hall": room_great_hall,
+    "dragon_lair": room_dragon_lair
 }
