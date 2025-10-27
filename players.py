@@ -4,7 +4,7 @@ class Player:
         self.player_class = player_class  #sets the class
         
       
-        base_stats = self.set_base_stats(player_class)      #depends on the class
+        base_stats = self.set_base_stats(self, player_class)      #depends on the class
         self.health = base_stats['health']      #health points
         self.mana = base_stats['mana']
         self.damage = base_stats['damage']
