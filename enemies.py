@@ -3,7 +3,7 @@ import random
 def roll_damage(enemy_dict):
 
     low, high = enemy_dict.get("damage_range", (1, 1))
-    return random.randint(low, high)
+    return random.randint(1, high)
 
 enemy_bandit = {
     "id": "bandit",
