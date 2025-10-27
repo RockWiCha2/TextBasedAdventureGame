@@ -12,7 +12,6 @@
 ---------------
 """
 
-from gui import * 
 from gameParser import *
 from items import *
 from players import *
@@ -187,29 +186,19 @@ def move(exits, direction):
         return rooms[exits[direction]]
 
 def print_current_room(currentRoom):
-    
-    print("Location:", currentRoom["name"])
-    print(currentRoom["description"])
+    gui.gui_print("Location: " + currentRoom["name"] + "\n" + currentRoom["description"])
     #outputs name and description of a room
 
 def get_user_input():
-    userChoice = input("What would you like to do? ")
+    userChoice = gui.get_text_input()
     normalised = normalise_input(userChoice)
-    #returns normalised text as an array of words
-    
     return normalised
     #gets input and normalises it
 def print_menu(currentRoom):
     exitString = get_exits(currentRoom["exits"])
     takeString = get_take(currentRoom["items"])
     dropString = get_drop(inventory)
-    
-    print("You can:")
-
-    print("||OPEN INVENT0RY||  ||OPEN MAP|| ||OPEN STATS||")
-    print(exitString)
-    print(takeString)
-    print(dropString)
+    gui.gui_print("You can:\n||OPEN INVENT0RY||\n||OPEN MAP||\n||OPEN STATS||\n" + exitString + "\n" + takeString + "\n" + dropString)
 def get_exits(exits):
     string = ""
     for i in exits:
@@ -227,15 +216,27 @@ def get_take(items):
     return string
 
 def menu(currentRoom, playerClass):
-    print_menu(currentRoom)
+    # Combine room info and menu options into one GUI message
+    exitString = get_exits(currentRoom["exits"])
+    takeString = get_take(currentRoom["items"])
+    dropString = get_drop(inventory)
+
+    combined_message = (
+        f"Location: {currentRoom['name']}\n"
+        f"{currentRoom['description']}\n\n"
+        "You can:\n"
+        "||OPEN INVENT0RY||  ||OPEN MAP||  ||OPEN STATS||\n"
+        f"{exitString}\n{takeString}\n{dropString}"
+    )
+
+    gui.gui_print(combined_message)
     userInput = get_user_input()
     currentRoom, playerClass = execute_command(userInput, currentRoom, playerClass)
     return currentRoom, playerClass
 
 def open_game(currentRoom, playerClass):
-    print("WELCOME")
-    print("Press ENTER to start")
-    enterToStart = input()
+    gui.gui_print("WELCOME\nPress ENTER to start")
+    _ = gui.get_text_input()
     print_current_room(currentRoom)
     #runs the opeining game sequence
     
@@ -280,6 +281,8 @@ def class_pick(playerClass, inventory):
 def main(currentRoom, playerClass, inventory):
     # Initialize the GUI window and setup necessary resources
     pickedClass = False
+    gui.start()
+    gui.pump()
     open_game(currentRoom, playerClass)
     while True:
         
@@ -289,6 +292,8 @@ def main(currentRoom, playerClass, inventory):
         if currentRoom == rooms["armory"]and pickedClass==False:
             playerClass, inventory = class_pick(playerClass, inventory)
             pickedClass = True
+        if not gui.pump():
+            break
             
     '''
     gui.start()
@@ -309,4 +314,3 @@ def main(currentRoom, playerClass, inventory):
     '''
 
 main(currentRoom, playerClass, inventory)
-
