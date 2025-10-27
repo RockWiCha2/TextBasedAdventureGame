@@ -3,6 +3,7 @@ from classes import *
 from items import *
 from gameParser import *
 from enemies import *
+from dungeon_map import *
 import random
 
 temp_bat = {
@@ -25,10 +26,11 @@ temp_warrior = {
     "armour": item_armor_iron_set
 }
 def get_weapon(inventory):
-    currentweapon = None
+    currentweapon = fist_attack
     for i in inventory:
             if i["type"]=="weapon":
                 currentWeapon = i
+            
     return currentWeapon
 def find_item_in_inventory(item_name_to_find):
     found_items = []
@@ -43,11 +45,20 @@ def find_quiver_in_inventory():
             return item
     return None
 
+def get_current_weapon(inventory):
+    currentWeapon = fist_attack
+    for i in inventory:
+            if i["type"]=="weapon":
+                currentWeapon = i
+            print(currentWeapon, i)
+    return currentWeapon
+        
 def start_encounter(player, monster):
     monster_alive = True
     player_alive = True
     player_defending = False
-
+    currentWeapon = get_current_weapon(inventory)
+    print(currentWeapon)
     player_health = player["health"]
     player_mana = player["mana"]
     if player== "mage":  #
@@ -61,7 +72,7 @@ def start_encounter(player, monster):
         raw_input = input("> ")
         userinput = normalise_input(raw_input)
         monster_turn = True
-
+    
         # Check for empty input after normalization
         if not userinput:
             print("You hesitate, unsure of what to do.")
@@ -187,7 +198,6 @@ def start_encounter(player, monster):
             print("You have defeated the", enemies[monster]["name"],"!")
             monster_alive = False
             monster_turn = False
-
         if monster_turn:
             print("The" ,enemies[monster]["name"]," attacks you!")
             player_block = currentArmor["block"]
