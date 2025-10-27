@@ -178,7 +178,7 @@ def execute_command(command, currentRoom, playerClass):
     else:
         print("This makes no sense.")
 
-    return currentRoom
+    return currentRoom, playerClass
 
    
 def move(exits, direction):
@@ -226,25 +226,19 @@ def get_take(items):
         string = string+"|| "+"TAKE "+i["name"].upper()+" ||  "
     return string
 
-def menu(currentRoom):
+def menu(currentRoom, playerClass):
     print_menu(currentRoom)
     userInput = get_user_input()
-    currentRoom = execute_command(userInput, currentRoom, playerClass)
-    return currentRoom
+    currentRoom, playerClass = execute_command(userInput, currentRoom, playerClass)
+    return currentRoom, playerClass
 
 def open_game(currentRoom, playerClass):
     print("WELCOME")
     print("Press ENTER to start")
     enterToStart = input()
     print_current_room(currentRoom)
-    while playerClass== peasant:
-        playerClass = class_choice(playerClass)
-    print("Good choice")
-    print("STATS:")
-    print(playerClass)
-    print_stats(playerClass)
     #runs the opeining game sequence
-    return playerClass
+    
 #runs the main game menu
 
 def print_stats(playerClass):
@@ -252,6 +246,9 @@ def print_stats(playerClass):
     print("HEALTH:",playerClass["health"])
     
     print("Damage multiplier:", playerClass["damageMult"],"X")
+
+
+
     
 def class_choice(playerClass):
     
@@ -271,18 +268,27 @@ def class_choice(playerClass):
     #changes the players class and returns what they have picked
     return playerClass
 
-        
-def main(currentRoom, playerClass):
+def class_pick(playerClass, inventory):
+    while playerClass== peasant:
+        playerClass = class_choice(playerClass)
+    for i in playerClass["starterItems"]:
+            inventory.append(i)
+    print("Good choice")
+    print("STATS:")
+    print_stats(playerClass)
+    return playerClass, inventory
+def main(currentRoom, playerClass, inventory):
     # Initialize the GUI window and setup necessary resources
-    playerClass = open_game(currentRoom, playerClass)
+    pickedClass = False
+    open_game(currentRoom, playerClass)
     while True:
         
-        currentRoom = menu(currentRoom)
+        currentRoom, playerClass = menu(currentRoom, playerClass)
         if currentRoom["enemy"]!=None:
-            
-            
-                
             start_encounter(playerClass, currentRoom["enemy"])
+        if currentRoom == rooms["armory"]and pickedClass==False:
+            playerClass, inventory = class_pick(playerClass, inventory)
+            pickedClass = True
             
     '''
     gui.start()
@@ -302,5 +308,5 @@ def main(currentRoom, playerClass):
             break
     '''
 
-main(currentRoom, playerClass)
+main(currentRoom, playerClass, inventory)
 
