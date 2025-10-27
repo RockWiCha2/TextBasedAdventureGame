@@ -134,7 +134,7 @@ room_great_hall = {
 room_dragon_lair = {
     "name": "Dragon's Lair",
     "description":
-    """You open the door into a vast, cavernous chamber.\nThe roof has collapsed, revealing the stormy sky above.\nIn the center of the room, a colossal Ashen Dragon coils around a pile of treasure.\nCowering nearby is your friend, Kirill!""",
+    """You open the door into a vast, cavernous chamber.\nThe roof has collapsed, revealing the stormy sky above.\nIn the center of the room, a colossal Ashen Dragon coils around a pile of treasure.\nCowering nearby is Princess Kirill!""",
     "exits": {"south": "great_hall"},
     "enemy": "dragon", #
     "items": []
