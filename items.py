@@ -2,6 +2,15 @@
 
 
 # Fighter weapons
+fist_attack = {
+    "id": "punch",
+    "name": "a punch",
+    "description": "left right goodnight",
+    "mass": 0.8,
+    "type": "weapon",
+    "class": "peasant",
+    "damage": 2
+}
 item_fighter_shortsword = {
     "id": "shortsword",
     "name": "a shortsword",
