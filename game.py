@@ -260,7 +260,7 @@ def print_stats(playerClass):
     
 def class_choice(playerClass):
     
-    gui.gui_print("Infront of you the wall shows 3 armour stands. One bears a large hulking armour that can withstand many strikes, one bears a light leather uniform designed for speed and deadlyness, and the final stand holds a robe that emmits magical properties:"+"/n"+"Choose either the BARBARIAN, ARCHER OR MAGE:")
+    gui.gui_print("Infront of you the wall shows 3 armour stands. One bears a large hulking armour that can withstand many strikes, one bears a light leather uniform designed for speed and deadlyness, and the final stand holds a robe that emmits magical properties:"+"\n"+"Choose either the BARBARIAN, ARCHER OR MAGE:")
     
     choice = gui.get_text_input()
     #gets the users input on what class they wish to pick
