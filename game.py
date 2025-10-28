@@ -58,7 +58,7 @@ def get_mass(inventory):
 
 
 def print_inventory():
-    invMass = get_mass()
+    invMass = get_mass(inventory)
     #outputs the title inventory and how much space is left
     string = ""
     for item in inventory:
@@ -77,7 +77,7 @@ def print_inventory():
             string = string+("RESTORATION:",item["restore_mana"],"MANA")
         string = string,"\n"
     
-    gui.gui_print("PLAYER INVENTORY" + "\n" + "==============================\n"+string+"\n"+"Press enter to continue")
+    gui.gui_print("PLAYER INVENTORY" + "\n" +string+"\n"+"Press enter to continue")
     
     _ = gui.get_text_input()
         #finds out the type of each item and outputs appropriate stats for them

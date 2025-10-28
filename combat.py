@@ -6,6 +6,8 @@ from enemies import *
 from dungeon_map import *
 import random
 
+import gui
+
 temp_bat = {
     "id": "bat_id",
     "name": "Bat",
@@ -25,6 +27,40 @@ temp_warrior = {
     "shield": item_shield_iron,
     "armour": item_armor_iron_set
 }
+
+def render_combat_screen(player, monster_key, extra_lines=None):
+    """
+    Combine combat info and options into ONE gui.gui_print() call (menu-style).
+    monster_key is the key used to index into the global enemies dict.
+    extra_lines: list[str] of outcome messages to show this turn.
+    """
+    if extra_lines is None:
+        extra_lines = []
+
+    enemy = enemies[monster_key]
+    enemy_name = enemy.get("name", "Enemy")
+    enemy_desc = enemy.get("description", "")
+    enemy_hp = enemy.get("health", "?")
+
+    player_hp = player.get("health", 0)
+    player_mana = player.get("mana", None)
+    dmg_mult = player.get("damageMult", 1)
+
+    hp_line = f"Your HP: {player_hp}" + (f"   |   Mana: {player_mana}" if player_mana is not None else "")
+    vs_line = f"{enemy_name} HP: {enemy_hp}"
+    stats_line = f"Your DMG x{dmg_mult}"
+
+    options = "|| ATTACK ||  || DEFEND ||  || USE <item> ||  || FLEE ||"
+
+    combined = (
+        f"{enemy_name}\n"
+        f"{enemy_desc}\n\n"
+        f"{hp_line}\n{vs_line}\n{stats_line}\n\n"
+        + ("\n".join(extra_lines) + ("\n\n" if extra_lines else ""))
+        + "Choose an action:\n"
+        + options
+    )
+    gui.gui_print(combined)
 def get_weapon(inventory):
     currentweapon = fist_attack
     for i in inventory:
@@ -54,112 +90,114 @@ def get_current_weapon(inventory):
     return currentWeapon
         
 def start_encounter(player, monster):
+    # State flags
     monster_alive = True
     player_alive = True
     player_defending = False
-    currentWeapon = get_current_weapon(inventory)
-    print(currentWeapon)
-    player_health = player["health"]
-    player_mana = player["mana"]
-    if player== "mage":  #
-        print(f"HP: {player_health} | Mana: {player_mana}")
-    else:
-        print(f"HP: {player_health}")
 
-    '''print(f"A terrifying", {monster["name"]} ,"appears!")'''
+    # Determine current weapon from inventory (keep existing helper)
+    currentWeapon = get_current_weapon(inventory)
+
+    # Local live stats
+    player_health = player["health"]
+    player_mana = player.get("mana", None)
+
+    # Buffer for outcome messages displayed on the next screen
+    turn_messages = []
+
     while monster_alive and player_alive:
-        print("What do you want to do? (Attack, Defend, Use or Flee)")
-        raw_input = input("> ")
-        userinput = normalise_input(raw_input)
+        # Sync live values back for display
+        player["health"] = player_health
+        if player_mana is not None:
+            player["mana"] = player_mana
+
+        # Render one combined combat screen (like menu)
+        render_combat_screen(player, monster, extra_lines=turn_messages)
+        turn_messages = []  # reset buffer for this turn
+
+        # Get command via GUI (non-blocking for window)
+        raw_input_text = gui.get_text_input()
+        userinput = normalise_input(raw_input_text)
         monster_turn = True
-    
+
         # Check for empty input after normalization
         if not userinput:
-            print("You hesitate, unsure of what to do.")
+            turn_messages.append("You hesitate, unsure of what to do.")
             monster_turn = False
             continue
 
         command = userinput[0]
-        
+
         if command == "attack":
-            if command == "attack":
-                # --- Archer Attack Logic ---
-                if player == "archer":  #
-                    quiver = find_quiver_in_inventory()
-
-                    if quiver and quiver.get("ammo", 0) > 0:
-                        quiver["ammo"] -= 1  # Deplete one arrow
-
-                        print(f"You fire an arrow from your {currentWeapon['name']}!")
-                        totalDamage = player["damageMult"] * currentWeapon["damage"]  #
-                        if totalDamage < 0: totalDamage = 0
-
-                        print(f"You hit {monster['name']} with {totalDamage} damage.")  #
-                        print(f"(You have {quiver['ammo']} arrows left.)")
-                        enemies[monster]["health"] -= totalDamage  #
-                    else:
-                        print("You're out of arrows! You bash the enemy with your bow.")
-                        totalDamage = 2
-                        print("You hit", monster,"with",totalDamage,"damage.")  #
-                        enemies[monster]["health"] -= totalDamage  #
-
-                # --- Fighter / Mage Melee Logic ---
+            # Archer Attack Logic
+            if player == "archer":
+                quiver = find_quiver_in_inventory()
+                if quiver and quiver.get("ammo", 0) > 0:
+                    quiver["ammo"] -= 1  # Deplete one arrow
+                    turn_messages.append(f"You fire an arrow from your {currentWeapon['name']}!")
+                    totalDamage = player["damageMult"] * currentWeapon["damage"]
+                    if totalDamage < 0:
+                        totalDamage = 0
+                    turn_messages.append(f"You hit {enemies[monster]['name']} with {totalDamage} damage.")
+                    turn_messages.append(f"(You have {quiver['ammo']} arrows left.)")
+                    enemies[monster]["health"] -= totalDamage
                 else:
-                    if player == "mage":  #
-                        print("You swing your staff...")
-                        totalDamage = currentWeapon["damage"]
-                    else:
-                        print(f"You swing your", currentWeapon["name"])
-                        totalDamage = player["damageMult"] * currentWeapon["damage"]#
+                    turn_messages.append("You're out of arrows! You bash the enemy with your bow.")
+                    totalDamage = 2
+                    turn_messages.append(f"You hit {enemies[monster]['name']} with {totalDamage} damage.")
+                    enemies[monster]["health"] -= totalDamage
+            # Fighter / Mage Melee Logic
+            else:
+                if player == "mage":
+                    turn_messages.append("You swing your staff...")
+                    totalDamage = currentWeapon["damage"]
+                else:
+                    turn_messages.append(f"You swing your {currentWeapon['name']}")
+                    totalDamage = player["damageMult"] * currentWeapon["damage"]
+                if totalDamage < 0:
+                    totalDamage = 0
+                turn_messages.append(f"You hit {enemies[monster]['name']} with {totalDamage} damage.")
+                enemies[monster]["health"] -= totalDamage
 
-                    if totalDamage < 0: totalDamage = 0
-
-                    print("You hit", monster,"with",totalDamage,"damage.")  #
-                    enemies[monster]["health"] -= totalDamage  #
-
-                print("The", monster,"now has",enemies[monster]["health"],"health.")  #
+            turn_messages.append(f"The {enemies[monster]['name']} now has {enemies[monster]['health']} health.")
 
         elif command == "cast":
-            if player["class"]["name"] != "mage":  #
-                print("You don't know how to cast spells!")
+            if player["class"]["name"] != "mage":
+                turn_messages.append("You don't know how to cast spells!")
                 monster_turn = False
             elif len(userinput) > 1:
                 spell_name_to_cast = " ".join(userinput[1:])
                 spell = find_item_in_inventory(spell_name_to_cast)
-
                 if spell and spell[0].get("type") == "spell":
                     spell_item = spell[0]
-                    mana_cost = spell_item.get("mana_cost", 0)  #
-
-                    if player_mana >= mana_cost:
-                        player_mana -= mana_cost
-                        spell_damage = spell_item.get("damage", 0)  #
-                        spell_power_bonus = player["weapon"].get("spell_power", 0)  #
+                    mana_cost = spell_item.get("mana_cost", 0)
+                    if (player_mana or 0) >= mana_cost:
+                        player_mana = (player_mana or 0) - mana_cost
+                        spell_damage = spell_item.get("damage", 0)
+                        spell_power_bonus = player["weapon"].get("spell_power", 0)
                         total_spell_damage = spell_damage + spell_power_bonus
-
-                        print(f"You cast {spell_item['name']} for {total_spell_damage} damage!")
-                        monster["health"] -= total_spell_damage
+                        turn_messages.append(f"You cast {spell_item['name']} for {total_spell_damage} damage!")
+                        enemies[monster]["health"] -= total_spell_damage
                     else:
-                        print("You don't have enough mana to cast that spell!")
+                        turn_messages.append("You don't have enough mana to cast that spell!")
                         monster_turn = False
                 else:
-                    print("You don't know that spell.")
+                    turn_messages.append("You don't know that spell.")
                     monster_turn = False
             else:
-                print("Cast what spell?")
+                turn_messages.append("Cast what spell?")
                 monster_turn = False
 
         elif command == "defend":
             player_defending = True
-            print("You raise your shield and brace for attack!")
+            turn_messages.append("You raise your shield and brace for attack!")
 
-        elif command == "use": # FIX: Using 'command' variable
-            if len(userinput) > 1: # FIX: Using 'userinput' list
-                item_name_to_use = " ".join(userinput[1:]) # FIX: Using 'userinput' list
+        elif command == "use":  # Using 'command' variable
+            if len(userinput) > 1:
+                item_name_to_use = " ".join(userinput[1:])
                 matched_items = find_item_in_inventory(item_name_to_use)
-
                 if not matched_items:
-                    print("You don't have that item in your inventory.")
+                    turn_messages.append("You don't have that item in your inventory.")
                     monster_turn = False
                 elif len(matched_items) == 1:
                     item = matched_items[0]
@@ -169,52 +207,61 @@ def start_encounter(player, monster):
                         if player_health > player["class"]["health"]:
                             player_health = player["class"]["health"]
                         inventory.remove(item)
-                        print(f"You use {item['name']} and restore {restore_amount} health. You now have {player_health} HP.")
+                        turn_messages.append(f"You use {item['name']} and restore {restore_amount} health. You now have {player_health} HP.")
                     else:
-                        print(f"You can't use the {item['name']} right now.")
+                        turn_messages.append(f"You can't use the {item['name']} right now.")
                 else:
-                    print("Which item did you mean? Be more specific.")
+                    turn_messages.append("Which item did you mean? Be more specific.")
                     for item in matched_items:
-                        print(f"- {item['name']}")
+                        turn_messages.append(f"- {item['name']}")
                     monster_turn = False
             else:
-                print("Use what? (e.g., 'use small health potion')")
+                turn_messages.append("Use what? (e.g., 'use small health potion')")
                 monster_turn = False
 
         elif command == "flee":
             player_speed = 5
-            monster_speed = monster.get("speed", 1)
+            monster_speed = enemies[monster].get("speed", 1)
             flee_chance = random.randint(1, player_speed + monster_speed)
             if flee_chance > monster_speed:
-                print(f"You successfully escape from the {monster['name']}!")
+                render_combat_screen(player, monster, extra_lines=[f"You successfully escape from the {enemies[monster]['name']}!"])
+                gui.get_text_input()
                 return
             else:
-                print(f"You try to run, but the {monster['name']} is too fast!")
+                turn_messages.append(f"You try to run, but the {enemies[monster]['name']} is too fast!")
         else:
-            print("You hesitate, unsure of what to do.")
+            turn_messages.append("You hesitate, unsure of what to do.")
             monster_turn = False
 
+        # Victory check mid-turn
         if enemies[monster]["health"] <= 0:
-            print("You have defeated the", enemies[monster]["name"],"!")
+            render_combat_screen(player, monster, extra_lines=[f"You have defeated the {enemies[monster]['name']}!"])
+            gui.get_text_input()
             monster_alive = False
             monster_turn = False
+            break
+
+        # Monster's turn
         if monster_turn:
-            print("The" ,enemies[monster]["name"]," attacks you!")
+            turn_messages.append(f"The {enemies[monster]['name']} attacks you!")
             player_block = currentArmor["block"]
             if player_defending:
                 player_block *= 2
-                print("Your defensive stance softens the blow!")
+                turn_messages.append("Your defensive stance softens the blow!")
                 player_defending = False
 
             monster_damage = roll_damage(enemies[monster]) - player_block
-            if monster_damage < 0: monster_damage = 0
+            if monster_damage < 0:
+                monster_damage = 0
 
             player_health -= monster_damage
-            print(f"You were hit for {monster_damage} damage. You have {player_health} health remaining.")
+            turn_messages.append(f"You were hit for {monster_damage} damage. You have {player_health} health remaining.")
 
-            if player_health <= 0: 
+            if player_health <= 0:
                 player_alive = False
+                break
 
-    # After the loop, check the result
+    # After the loop, check the result (convert to GUI)
     if player_health <= 0:
-        print("\nYou have been defeated. Game Over.")
+        render_combat_screen(player, monster, extra_lines=["You have been defeated. Game Over."])
+        gui.get_text_input()
