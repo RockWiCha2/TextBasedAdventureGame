@@ -1,24 +1,28 @@
 from items import *
 from dungeon_map import *
 peasant = {
+    "name": "Peasant",
     "health": 100,
     "damageMult": 1,
     "maxWeight": 2.5,
     "mana": 100
     }
 barbarian = {
+    "name": "Barbarian",
     "health": 250,
     "damageMult": 1,
     "maxWeight": 8,
     "mana": 100
     }
 archer = {
+    "name": "Archer",
     "health": 125,
     "damageMult": 1.75,
     "maxWeight": 5
 
     }
 mage = {
+    "name": "Mage",
     "health": 150,
     "damageMult": 1,
     "maxWeight": 3.5,

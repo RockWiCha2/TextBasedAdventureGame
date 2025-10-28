@@ -10,7 +10,7 @@ enemy_bandit = {
     "name": "Bandit",
     "description": "A jittery roadside cutpurse with more nerves than skill.",
     "health": 18,
-    "damage_range": (1, 3),
+    "damage_range": (5, 7),
     "is_boss": False
 }
 
@@ -19,7 +19,7 @@ enemy_skeleton = {
     "name": "Skeleton",
     "description": "Castle guard bones wired together by stale sorcery.",
     "health": 26,
-    "damage_range": (2, 5),
+    "damage_range": (5, 10),
     "is_boss": False
 }
 
@@ -28,7 +28,7 @@ enemy_ghost = {
     "name": "Ghost",
     "description": "A pale silhouette drifting between torn banners.",
     "health": 24,
-    "damage_range": (3, 6),
+    "damage_range": (5, 10),
     "is_boss": False
 }
 
@@ -37,7 +37,7 @@ enemy_knight = {
     "name": "Fallen Knight",
     "description": "A once-honorable champion sealed inside blackened plate.",
     "health": 60,
-    "damage_range": (5, 10),
+    "damage_range": (20, 30),
     "is_boss": True
 }
 
@@ -46,7 +46,7 @@ enemy_giant_bat = {
     "name": "Giant Bat",
     "description": "A ceiling-spanning nightmare with leather wings and needle fangs.",
     "health": 32,
-    "damage_range": (4, 8),
+    "damage_range": (15, 17),
     "is_boss": False
 }
 
@@ -55,7 +55,7 @@ enemy_witch = {
     "name": "Witch",
     "description": "A scholar of bitter moons, draped in raven thread.",
     "health": 54,
-    "damage_range": (6, 12),
+    "damage_range": (20, 30),
     "is_boss": True
 }
 
@@ -64,7 +64,7 @@ enemy_stone_golem = {
     "name": "Stone Golem",
     "description": "A walking bulwark carved from the castle’s own foundations.",
     "health": 80,
-    "damage_range": (7, 13),
+    "damage_range": (30, 40),
     "is_boss": False
 }
 
@@ -73,7 +73,7 @@ enemy_dragon = {
     "name": "Ashen Dragon",
     "description": "The crown of calamities coils atop the highest spire.",
     "health": 220,
-    "damage_range": (12, 20),
+    "damage_range": (50, 60),
     "is_boss": True
 }
 

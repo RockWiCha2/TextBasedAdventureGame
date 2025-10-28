@@ -106,35 +106,21 @@ def execute_take(item_id, currentRoom, playerClass):
                 print("That is too heavy to carry!")
         else:
             print("That is not a valid item to take in this room!!")
-    
-    
-def execute_drop(item_id, currentRoom):
-   
-    for i in inventory:
-        if item_id == i["id"] and not item_id in currentRoom["items"]:
-            #if the item input is the same the id and not already in the room
-            currentRoom["items"].append(i)
-            #add the item to the room items
-            inventory.remove(i)
-            #removes item from inventory
-            print("You have dropped", item_id,"in",currentRoom["name"])
-            
-def execute_go(direction, currentRoom):
-    
-    nextRoom = move(currentRoom["exits"], direction)
-    #gets the next room to move too
-    if nextRoom:
-        #if the room is valid
-        currentRoom = nextRoom
-        #the current room becomes the next room
-        
-    else:
-        print("That is not a valid direction for an exit!!")
-    print_current_room(currentRoom)
-    #outputs
-    return currentRoom
-    
-        
+
+def check_for_keys(inventory):
+    # Checks if both the Knight's Crest and Witch's Charm are in the inventory.
+    has_crest = False
+    has_charm = False
+
+    # Loop through the inventory to find the keys
+    for item in inventory:
+        if item["id"] == "crest":  #
+            has_crest = True
+        elif item["id"] == "charm":  #
+            has_charm = True
+
+    # Return True only if both keys were found
+    return has_crest and has_charm
    
 def execute_command(command, currentRoom, playerClass):
     if 0 == len(command):
@@ -158,27 +144,86 @@ def execute_command(command, currentRoom, playerClass):
         
 
     elif command[0] == "go":
-        #if the initial word is go it will run this
         if len(command) > 1:
-            currentRoom = execute_go(command[1], currentRoom)
-            #changes the current room variable to the output of the execute_go function
-        else:
-            print("Go where?")
-    
-        
+            direction = command[1]
+            next_room = move(currentRoom["exits"], direction)  # Find the next room
 
+            if next_room:
+                # Check if the destination is the Dragon's Lair
+                if next_room == rooms["dragon_lair"]:
+                    # If it is, check if the player has the keys
+                    if not check_for_keys(inventory):
+                        # If keys are missing, block entry and don't change the room
+                        gui.gui_print(
+                            "The massive door is sealed by a powerful magic. You feel the presence of two forces, one of honor and one of darkness, barring your way.")
+                    else:
+                        # If keys are present, allow movement
+                        gui.gui_print(f"You travel {direction}...")
+                        currentRoom = next_room
+                else:
+                    # For any other room, allow movement
+                    gui.gui_print(f"You travel {direction}...")
+                    currentRoom = next_room
+            else:
+                gui.gui_print("That is not a valid direction for an exit!!")
+        else:
+            gui.gui_print("Go where?")
 
     elif command[0] == "take":
         if len(command) > 1:
-            execute_take(command[1], currentRoom, playerClass)
+            # Join all words after "take" to get the full item name
+            item_name_to_take = " ".join(command[1:])
+
+            item_found = None  # Variable to hold the item if we find it
+
+            # Loop through all items in the current room
+            for item in currentRoom["items"]:
+                # Check if the name you typed is part of the item's descriptive name
+                if item_name_to_take.lower() in item["name"].lower():
+                    item_found = item
+                    break  # Stop searching once we find a match
+
+            if item_found:
+                current_mass = get_mass(inventory)
+                # Check if the player has enough capacity to carry the item
+                if (current_mass + item_found["mass"]) <= playerClass["maxWeight"]:
+                    inventory.append(item_found)
+                    currentRoom["items"].remove(item_found)
+                    gui.gui_print(f"You have taken {item_found['name']}.")
+                else:
+                    gui.gui_print("That is too heavy to carry!")
+            else:
+                # This message now only shows if the item truly isn't in the room
+                gui.gui_print("There is no such item here.")
         else:
-            print("Take what?")
+            gui.gui_print("Take what?")
 
     elif command[0] == "drop":
         if len(command) > 1:
-            execute_drop(command[1], currentRoom)
+            # Join all words after "drop" to get the full item name
+            item_name_to_drop = " ".join(command[1:])
+
+            item_found = None  # Variable to hold the item if we find it
+
+            # Loop through all items in the player's inventory
+            for item in inventory:
+                # Remove punctuation for a fair comparison
+                item_name_in_inventory = remove_punct(item["name"].lower())
+
+                # Check if the name that has been is part of the item's full name
+                if item_name_to_drop.lower() in item_name_in_inventory:
+                    item_found = item
+                    break  # Stop searching once we find a match
+
+            if item_found:
+                # Move the item from the inventory to the room
+                currentRoom["items"].append(item_found)
+                inventory.remove(item_found)
+                gui.gui_print(f"You have dropped {item_found['name']}.")
+            else:
+                gui.gui_print("You don't have that item in your inventory.")
         else:
-            print("Drop what?")
+            gui.gui_print("Drop what?")
     else:
         print("This makes no sense.")
 

@@ -4,7 +4,7 @@ from enemies import *
 # The player will begin in the cell of the bandit hideout.
 start_room = "kidnapped_cell"
 
-# --- 1. Bandit Hideout (Tutorial Area) ---
+# Bandit hideout (Tutorial area)
 
 room_kidnapped_cell = {
     "name": "Kidnapped Cell",
@@ -51,7 +51,7 @@ room_hideout_exit = {
     "items": []
 }
 
-# --- 2. The Wilderness Hub ---
+# Forest hub. Serves as the intersection between the 3 main areas
 
 room_forest_clearing = {
     "name": "Forest Clearing",
@@ -68,18 +68,18 @@ room_murky_swamp = {
     "name": "Murky Swamp",
     "description":
     """The ground turns to mud and stagnant water.\nTwisted trees reach out like grasping claws, and the air is thick with the buzz of insects.\nA ghostly light flickers in the distance to the west.""",
-    "exits": {"east": "forest_clearing", "west": "witchs_cabin"},
+    "exits": {"east": "forest_clearing", "west": "witches_cabin"},
     "enemy": "ghost", #
     "items": []
 }
 
-room_witchs_cabin = {
+room_witches_cabin = {
     "name": "Witch's Cabin",
     "description":
     """A dilapidated cabin stands on stilts above the swamp water.\nInside, shelves are crammed with strange potions and arcane ingredients.\nA wizened witch cackles as you enter, her fingers crackling with dark energy.""",
     "exits": {"east": "murky_swamp"},
     "enemy": "witch", #
-    "items": [item_spell_lightning] # The Witch's key and a spell reward.
+    "items": [item_spell_lightning, item_witchs_charm] # The Witch's key and a spell reward.
 }
 
 # --- 3B. The Knight's Castle (East Path) ---
@@ -108,7 +108,7 @@ room_throne_room = {
     """This was once a grand throne room, but now it is a place of sorrow.\nA disgraced, Fallen Knight stands guard, his armor blackened by some terrible magic.\nHe raises his greatsword, honor-bound to defend this place to the death.""",
     "exits": {"south": "castle_barracks"},
     "enemy": "knight", #
-    "items": [item_fighter_greatsword] # The Knight's key and a weapon reward.
+    "items": [item_fighter_greatsword, item_knights_crest] # The Knight's key and a weapon reward.
 }
 
 # --- 4. The Dragon's Peak (Final Area) ---
@@ -149,7 +149,7 @@ rooms = {
     "hideout_exit": room_hideout_exit,
     "forest_clearing": room_forest_clearing,
     "murky_swamp": room_murky_swamp,
-    "witches_cabin": room_witchs_cabin,
+    "witches_cabin": room_witches_cabin,
     "knights_castle_drawbridge": room_knights_castle_drawbridge,
     "castle_barracks": room_castle_barracks,
     "throne_room": room_throne_room,

@@ -9,7 +9,7 @@ fist_attack = {
     "mass": 0.8,
     "type": "weapon",
     "class": "peasant",
-    "damage": 2
+    "damage": 10
 }
 item_fighter_shortsword = {
     "id": "shortsword",
@@ -18,7 +18,7 @@ item_fighter_shortsword = {
     "mass": 0.8,
     "type": "weapon",
     "class": "fighter",
-    "damage": 6
+    "damage": 30
 }
 
 item_fighter_longsword = {
@@ -28,7 +28,7 @@ item_fighter_longsword = {
     "mass": 1.0,
     "type": "weapon",
     "class": "fighter",
-    "damage": 8
+    "damage": 40
 }
 
 item_fighter_greatsword = {
@@ -38,7 +38,7 @@ item_fighter_greatsword = {
     "mass": 1.4,
     "type": "weapon",
     "class": "fighter",
-    "damage": 12
+    "damage": 70
 }
 
 # Shields
@@ -48,7 +48,7 @@ item_shield_wood = {
     "description": "A round shield made of reinforced oak.",
     "mass": 0.6,
     "type": "shield",
-    "block": 3
+    "block": 15
 }
 
 item_shield_iron = {
@@ -57,7 +57,7 @@ item_shield_iron = {
     "description": "A sturdy iron shield with a boss.",
     "mass": 0.8,
     "type": "shield",
-    "block": 5
+    "block": 25
 }
 
 # Archer weapons and ammo
@@ -68,7 +68,7 @@ item_archer_shortbow = {
     "mass": 0.7,
     "type": "weapon",
     "class": "archer",
-    "damage": 5
+    "damage": 30
 }
 
 item_archer_longbow = {
@@ -78,7 +78,7 @@ item_archer_longbow = {
     "mass": 0.9,
     "type": "weapon",
     "class": "archer",
-    "damage": 8
+    "damage": 50
 }
 
 item_archer_light_crossbow = {
@@ -88,7 +88,7 @@ item_archer_light_crossbow = {
     "mass": 1.0,
     "type": "weapon",
     "class": "archer",
-    "damage": 9
+    "damage": 80
 }
 
 item_quiver_arrows = {
@@ -109,7 +109,7 @@ item_mage_oak_staff = {
     "mass": 0.7,
     "type": "weapon",
     "class": "mage",
-    "damage": 3,
+    "damage": 10,
     "spell_power": 1
 }
 
@@ -120,7 +120,7 @@ item_mage_runed_staff = {
     "mass": 0.9,
     "type": "weapon",
     "class": "mage",
-    "damage": 6,
+    "damage": 15,
     "spell_power": 2
 }
 
@@ -131,7 +131,7 @@ item_mage_arcane_staff = {
     "mass": 1.1,
     "type": "weapon",
     "class": "mage",
-    "damage": 8,
+    "damage": 20,
     "spell_power": 3
 }
 
@@ -143,7 +143,7 @@ item_spell_firebolt = {
     "mass": 0.1,
     "type": "spell",
     "element": "fire",
-    "damage": 10,
+    "damage": 40,
     "mana_cost": 5
 }
 
@@ -154,7 +154,7 @@ item_spell_icespike = {
     "mass": 0.1,
     "type": "spell",
     "element": "ice",
-    "damage": 8,
+    "damage": 60,
     "mana_cost": 5,
     "effect": "slow"
 }
@@ -166,7 +166,7 @@ item_spell_lightning = {
     "mass": 0.1,
     "type": "spell",
     "element": "lightning",
-    "damage": 12,
+    "damage": 80,
     "mana_cost": 8
 }
 
@@ -176,7 +176,7 @@ item_spell_heal = {
     "description": "Mend wounds with a whispered prayer.",
     "mass": 0.1,
     "type": "spell",
-    "heal": 12,
+    "heal": 20,
     "mana_cost": 6
 }
 
@@ -188,7 +188,7 @@ item_armor_iron_set = {
     "mass": 1.0,
     "type": "armor",
     "class": "fighter",
-    "block": 6
+    "block": 50
 }
 
 item_armor_leather_set = {
@@ -198,7 +198,7 @@ item_armor_leather_set = {
     "mass": 0.8,
     "type": "armor",
     "class": "archer",
-    "block": 3
+    "block": 30
 }
 
 item_armor_mage_robes = {
@@ -208,7 +208,7 @@ item_armor_mage_robes = {
     "mass": 0.6,
     "type": "armor",
     "class": "mage",
-    "block": 2,
+    "block": 20,
     "mana_bonus": 10
 }
 
@@ -250,27 +250,19 @@ item_potion_mana_medium = {
 }
 
 # Key items
-item_key_castle = {
-    "id": "castlekey",
-    "name": "the castle key",
-    "description": "A heavy iron key that opens the castle gate.",
+item_witchs_charm = {
+    "id": "charm",
+    "name": "a witch charm",
+    "description": "A small, twisted effigy made of wicker and raven feathers. It hums with a strange, dark energy.",
     "mass": 0.1,
     "type": "key"
 }
 
-item_key_mountain_hall = {
-    "id": "mountainkey",
-    "name": "the Hall of the Mountain King key",
-    "description": "An ancient brass key engraved with runes.",
-    "mass": 0.1,
-    "type": "key"
-}
-
-item_lizard_tongue = {
-    "id": "lizardtongue",
-    "name": "a lizard's tongue",
-    "description": "A rare alchemical reagent for the witch's cauldron.",
-    "mass": 0.1,
+item_knights_crest = {
+    "id": "crest",
+    "name": "a knight crest",
+    "description": "A heavy steel emblem, warm to the touch. It represents a solemn vow to guard the kingdom.",
+    "mass": 0.2,
     "type": "key"
 }
 
@@ -308,7 +300,7 @@ items_potions = [
     item_potion_mana_small, item_potion_mana_medium
 ]
 
-items_keys = [item_key_castle, item_key_mountain_hall, item_lizard_tongue]
+items_keys = [item_witchs_charm, item_knights_crest]
 
 # Convenience list of all fantasy items
 fantasy_items = items_weapons + items_spells + items_armours + items_potions + items_keys + [item_quiver_arrows]
