@@ -103,8 +103,6 @@ Developed by **Group 23**
 Contributors:
 - James Harvey  
 - Harri Latewood
-- Abdullah Almutairi
-- Morgan Harris
 - Rida Shah
 - Ruby Lewis
 - Thomas Cox
